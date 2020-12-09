@@ -12,6 +12,7 @@ import { ClerkHomeComponent } from './clerk-home/clerk-home.component';
 import { VehicleDetailComponent } from './vehicle-detail/vehicle-detail.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
+import { authInterceptorProviders } from './helpers/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import { ProfileSettingsComponent } from './profile-settings/profile-settings.co
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
