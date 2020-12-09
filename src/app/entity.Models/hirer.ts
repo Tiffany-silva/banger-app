@@ -1,3 +1,5 @@
+import { Role } from './clerk';
+
 export class Hirer {
     
     private hirerId:string='';
@@ -10,10 +12,15 @@ export class Hirer {
     private _address:string='';
     private _dob!: Date;
     private _password:string='';
-
+    private _blackListed:boolean=false;
+    private _role:Role=Role.HIRER;
     constructor(){
    }
 
+   public get role(){
+       return this._role;
+   }
+   
     public get firstName(){
         return this._firstName;
     }
@@ -90,6 +97,14 @@ export class Hirer {
 
     public set password(password:string){
         this._password=password;
+    }
+
+    public get blackListed(){
+        return this._blackListed;
+    }
+
+    public set BlackListed(blackListed:boolean){
+        this._blackListed=blackListed;
     }
 
 }
