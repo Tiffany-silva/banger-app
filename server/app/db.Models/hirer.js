@@ -10,8 +10,8 @@ module.exports = (sequelize, Sequelize) => {
         address: Sequelize.STRING,
         email:Sequelize.STRING,
         password: Sequelize.STRING,
-        blackListed: Sequelize.BOOLEAN
-
+        blackListed: Sequelize.BOOLEAN,
+        token: Sequelize.STRING
     });
     return Hirer;
 }
