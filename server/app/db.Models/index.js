@@ -34,6 +34,7 @@ db.vehicle=vehicleModel(sequelize, Sequelize);
 db.clerk = clerkModel(sequelize, Sequelize);
 db.additionalEquipment = additionalEquipmentModel(sequelize, Sequelize);
 db.role= roleModel(sequelize, Sequelize);
+
 db.hirer.hasMany(db.booking);
 db.booking.belongsTo(db.hirer);
 
@@ -43,27 +44,27 @@ db.booking.belongsTo(db.vehicle);
 db.additionalEquipment.belongsToMany(db.booking, {through: db.booking_additionalEquipment, unique: false  });
 db.booking.belongsToMany(db.additionalEquipment, { through: db.booking_additionalEquipment, unique: false });
 
-db.role.belongsToMany(db.clerk, {through: "user_roles", foreignKey: "roleId", otherKey: "userId"});
-db.clerk.belongsToMany(db.role, {through: "user_roles", foreignKey: "userId", otherKey: "roleId"});
+db.role.hasMany(db.clerk);
+db.clerk.belongsTo(db.role);
 
 db.role.hasMany(db.hirer);
 db.hirer.belongsTo(db.role);
 
 db.ROLES = ["clerk", "hirer"];
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
   .then(() => {
     console.log(`Database & tables created!`)
     initial();
     }
 )
 function initial() {
-  Role.create({
+  db.role.create({
     id: 1,
     name: "hirer"
   });
  
-  Role.create({
+  db.role.create({
     id: 2,
     name: "clerk"
   });
