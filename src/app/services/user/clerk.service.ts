@@ -10,16 +10,16 @@ export class ClerkService {
 
   constructor(private http: HttpClient) { }
 
-  postUpdateEmail(): Observable<any> {
-    return this.http.put(baseUrl + 'updateEmail', { responseType: 'text' });
+  postUpdateEmail(id:any, data:any): Observable<any> {
+    return this.http.put(`${baseUrl}/updateEmail/${id}`, data);
   }
 
-  postUpdatePassword(): Observable<any> {
-    return this.http.put(baseUrl + 'updatePassword', { responseType: 'text' });
+  postUpdatePassword(id:any, data:any): Observable<any> {
+    return this.http.put(`${baseUrl}/updatePassword/${id}`, data);
   }
 
-  postUpdateName(): Observable<any> {
-    return this.http.put(baseUrl + 'updateName', { responseType: 'text' });
+  postUpdateName(id:any, data:any): Observable<any> {
+    return this.http.put(`${baseUrl}/updateName/${id}`, data);
   }
 
   getAllClerks(): Observable<any> {
