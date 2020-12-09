@@ -1,36 +1,44 @@
     const hirer = require("../controllers/hirer.controller");
-  
+    const  authJwt  = require("../middleware").authJwt;
+
     var hirerRouter = require("express").Router();
   
+    hirerRouter.use(function(req, res, next) {
+      res.header(
+        "Access-Control-Allow-Headers",
+        "x-access-token, Origin, Content-Type, Accept"
+      );
+      next();
+    });
     // Create a new hirer
     hirerRouter.post("/", hirer.create);
 
-    hirerRouter.get("/findAllBlacklisted", hirer.findAllBlacklisted);
+    hirerRouter.get("/findAllBlacklisted",[authJwt.verifyToken, authJwt.isClerk], hirer.findAllBlacklisted);
 
-    hirerRouter.get("/findAllBookingsOfHirer", hirer.findAllBookingsOfHirer);
+    hirerRouter.get("/findAllBookingsOfHirer",[authJwt.verifyToken], hirer.findAllBookingsOfHirer);
   
     // Retrieve all hirer
-    hirerRouter.get("/", hirer.findAll);
+    hirerRouter.get("/",[authJwt.verifyToken, authJwt.isClerk], hirer.findAll);
     
     // Retrieve a single hirer with id
-    hirerRouter.get("/:id", hirer.findOne);
+    hirerRouter.get("/:id",[authJwt.verifyToken], hirer.findOne);
 
-    hirerRouter.put("/blackList/:id", hirer.blackList);
+    hirerRouter.put("/blackList/:id", [authJwt.verifyToken, authJwt.isClerk],hirer.blackList);
 
-    hirerRouter.put("/confirmIdentity/:id", hirer.confirmIdentity);
+    hirerRouter.put("/confirmIdentity/:id",[authJwt.verifyToken], hirer.confirmIdentity);
 
-    hirerRouter.put("/updatePhotoURL/:id", hirer.updatePhotoURL);
+    hirerRouter.put("/updatePhotoURL/:id",[authJwt.verifyToken], hirer.updatePhotoURL);
 
-    hirerRouter.put("/updatePassword/:id", hirer.updatePassword);
+    hirerRouter.put("/updatePassword/:id",[authJwt.verifyToken], hirer.updatePassword);
 
-    hirerRouter.put("/updateEmail/:id", hirer.updateEmail);
+    hirerRouter.put("/updateEmail/:id", [authJwt.verifyToken],hirer.updateEmail);
 
-    hirerRouter.put("/updateAddress/:id", hirer.updateAddress);
+    hirerRouter.put("/updateAddress/:id",[authJwt.verifyToken], hirer.updateAddress);
 
     // Delete a hirer with id
-    hirerRouter.delete("/:id", hirer.delete);
+    hirerRouter.delete("/:id",[authJwt.verifyToken, authJwt.isClerk], hirer.delete);
   
     // Delete all hirer
-    hirerRouter.delete("/", hirer.deleteAll);
+    hirerRouter.delete("/",[authJwt.verifyToken, authJwt.isClerk], hirer.deleteAll);
   
   module.exports=hirerRouter;

@@ -1,27 +1,50 @@
+const  authJwt  = require("../middleware").authJwt;
+const clerks = require("../controllers/clerk.controller");
+var routerClerk = require("express").Router();
 
-    const clerks = require("../controllers/clerk.controller");
-  
-    var routerClerk = require("express").Router();
-  
-    // Create a new clerk
-    routerClerk.post("/", clerks.create);
-  
-    // Retrieve all clerks
-    routerClerk.get("/", clerks.findAll);
-  
-    // Retrieve a single clerk with id
-    routerClerk.get("/:id", clerks.findOne);
-  
-    // Update a clerk with id
-    // router.put("/:id", clerks.update);
-  
-    // Delete a clerk with id
-    routerClerk.delete("/:id", clerks.delete);
-  
-    routerClerk.put("/updateEmail/:id", clerks.updateEmail);
+routerClerk.use(function(req, res, next) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+  });
 
-    routerClerk.put("/updatePassword/:id", clerks.updatePassword);
+// Create a new clerk
+// routerClerk.post("/", [authJwt.verifyToken, authJwt.isClerk], clerks.create);
 
-    routerClerk.put("/updateName/:id", clerks.updateName);
+// Retrieve all clerks
+routerClerk.get("/", [authJwt.verifyToken, authJwt.isClerk], clerks.findAll);
 
-    module.exports=routerClerk;
+// Retrieve a single clerk with id
+routerClerk.get("/:id", [authJwt.verifyToken, authJwt.isClerk], clerks.findOne);
+
+// Update a clerk with id
+// router.put("/:id", clerks.update);
+
+// Delete a clerk with id
+routerClerk.delete(
+  "/:id",
+  [authJwt.verifyToken, authJwt.isClerk],
+  clerks.delete
+);
+
+routerClerk.put(
+  "/updateEmail/:id",
+  [authJwt.verifyToken, authJwt.isClerk],
+  clerks.updateEmail
+);
+
+routerClerk.put(
+  "/updatePassword/:id",
+  [authJwt.verifyToken, authJwt.isClerk],
+  clerks.updatePassword
+);
+
+routerClerk.put(
+  "/updateName/:id",
+  [authJwt.verifyToken, authJwt.isClerk],
+  clerks.updateName
+);
+
+module.exports = routerClerk;
