@@ -3,6 +3,15 @@ const ROLES = db.ROLES;
 const clerk = db.clerk;
 const hirer=db.hirer;
 
+
+checkDuplicateEmail = (req, res, next)=>{
+  if(req.body.role==="clerk"){
+    checkDuplicateEmailClerk(req,res,next);
+  }else if(req.body.role==="hirer"){
+    checkDuplicateEmailHirer(req,res,next);
+  }
+}
+
 checkDuplicateEmailHirer = (req, res, next) => {
       // Email
       hirer.findOne({
@@ -22,6 +31,7 @@ checkDuplicateEmailHirer = (req, res, next) => {
   
   checkDuplicateEmailClerk = (req, res, next) => {
     // Email
+    console.log(req.body);
     clerk.findOne({
       where: {
         email: req.body.email
@@ -29,7 +39,7 @@ checkDuplicateEmailHirer = (req, res, next) => {
     }).then(user => {
       if (user) {
         res.status(400).send({
-          message: "Failed! Email is already in use!"
+          message: "Failed! clerk email is already in use!"
         });
         return;
       }
@@ -38,23 +48,18 @@ checkDuplicateEmailHirer = (req, res, next) => {
 };
 
 checkRolesExisted = (req, res, next) => {
-    if (req.body.roles) {
-      for (let i = 0; i < req.body.roles.length; i++) {
-        if (!ROLES.includes(req.body.roles[i])) {
+    if (req.body.role && !ROLES.includes(req.body.role)) {
           res.status(400).send({
-            message: "Failed! Role does not exist = " + req.body.roles[i]
+            message: "Failed! Role does not exist = " + req.body.role
           });
           return;
-        }
-      }
-    }
-    
+    } 
     next();
   };
 
-  const verifySignUp = {
+  const verifyRegistration = {
     checkDuplicateEmail: checkDuplicateEmail,
     checkRolesExisted: checkRolesExisted
   };
   
-  module.exports = verifySignUp;
+  module.exports = verifyRegistration;

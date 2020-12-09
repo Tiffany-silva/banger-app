@@ -1,32 +1,35 @@
 const db = require("../db.Models");
 const config = require("../configuration/auth.config");
-const hirer = db.hirer;
-const clerk=db.clerk;
-const role = db.role;
-
-const Op = db.Sequelize.Op;
-
+const hirerdb = db.hirer;
+const clerkdb=db.clerk;
+const roledb = db.role;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-exports.registerClerk = (req, res) => {
+exports.signup=(req, res)=>{
+  if(req.body.role==="clerk"){
+    registerClerk(req, res);
+  }else if(req.body.role==="hirer"){
+    registerHirer(req,res);
+  }
+}
+
+registerClerk = (req, res) => {
   // Save User to Database
-  clerk.create({
+  clerkdb.create({
     name:req.body.name,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8)
   })
     .then(user => {
-      if (req.body.roles) {
-        role.findAll({
+      if (req.body.role) {
+        roledb.findOne({
           where: {
-            name: {
-              [Op.or]: req.body.roles
-            }
+            name:  req.body.role
           }
         }).then(roles => {
-          user.setRoles(roles).then(() => {
-            res.send({ message: "User was registered successfully!" });
+          user.setRole(roles).then(() => {
+              res.status(200).json({success:  true, user: user});
           });
         });
       }
@@ -36,7 +39,7 @@ exports.registerClerk = (req, res) => {
     });
 };
 
-exports.registerHirer = (req, res) => {
+registerHirer = (req, res) => {
 
     let hirerUser = {
         firstName:req.body.firstName,
@@ -52,18 +55,16 @@ exports.registerHirer = (req, res) => {
       }
       
     // Save User to Database
-    hirer.create(hirerUser)
+    hirerdb.create(hirerUser)
       .then(user => {
-        if (req.body.roles) {
-          role.findAll({
+        if (req.body.role) {
+          roledb.findOne({
             where: {
-              name: {
-                [Op.or]: req.body.roles
-              }
+              name:  req.body.role
             }
           }).then(roles => {
-            user.setRoles(roles).then(() => {
-              res.send({ message: "User was registered successfully!" });
+            user.setRole(roles).then(() => {
+                res.status(200).json({success:  true, user: user});
             });
           });
         }
@@ -75,15 +76,16 @@ exports.registerHirer = (req, res) => {
 
 exports.signin = async (req, res) => {
     try{
-        let hirer=await hirer.findOne({where: {email: req.body.email}});
-        let clerk=await clerk.findOne({where: {email: req.body.email}});
+
+        let hirer=await hirerdb.findOne({where: {email: req.body.email}, include: [roledb]});
+        let clerk=await clerkdb.findOne({where: {email: req.body.email},include: [roledb]});
         let response;
         if(hirer){
-            response=signinHirer(req, res, hirer);
+            response=await validateSignIn(req, res, hirer);
             res.status(200).send(response);
         }else{
             if(clerk){
-                response=signInClerk(req, res, clerk);
+                response=await validateSignIn(req, res, clerk);
                 res.status(200).send(response);
             }else{
                 return res.status(404).send({ message: "User Not found." });
@@ -91,15 +93,13 @@ exports.signin = async (req, res) => {
         }
     }catch(error){
         res.status(500).send({ message: error.message });
-    }
-  
-      
+    }   
 }
 
-signinHirer=(req,res, hirer)=>{
+validateSignIn=async (req, res, user)=>{
     let passwordIsValid = bcrypt.compareSync(
         req.body.password,
-        hirer.password
+        user.password
       );
 
     if (!passwordIsValid) {
@@ -108,50 +108,73 @@ signinHirer=(req,res, hirer)=>{
           message: "Invalid Password!"
         });
     } 
-
-    let token = jwt.sign({ id: hirer.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
-    });
-
-    let authority;
-    hirer.getRoles().then(roles => {
-        authority="ROLE_" +roles.name.toUpperCase();
-        return {
-          id: hirer.id,
-          email: hirer.email,
-          roles: authority,
+    if(user.token){
+      res.status(400).json({  error: true, message: "already logged in"});
+    }else{
+      let role=user.role.name;
+      let token= await this.generateToken(user, role);
+        console.log(token +"jiiii");
+     
+      let response={
+          id: user.id,
+          email: user.email,
+          role: role,
           accessToken: token
         };
-    });  
-}
+        return  response;
+    }
+    // let token = jwt.sign({ id: clerk.id }, config.secret, {
+    //     expiresIn: 86400 // 24 hours
+    // });
+    
+    }
 
-signInClerk=(req, res, clerk)=>{
-    let passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        clerk.password
-      );
 
-    if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
-    } 
+exports.generateToken=async (user,role)=>{
 
-    let token = jwt.sign({ id: clerk.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
-    });
+  let token = jwt.sign({ id: user.id }, config.secret);
+  console.log(token);
+  if(role==="clerk"){
+    let done=await clerkdb.update({token: token}, {where: {id: user.id}});
+    if(done) return token;
+  }else if(role==="hirer"){
+    let done=await hirerdb.update({token: token}, {where: {id: user.id}});
+    if(done) return token;
+    }
+  }
+  
 
-    let authorities = [];
-    clerk.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        authorities.push("ROLE_" + roles[i].name.toUpperCase());
-      }
-      return {
-        id: clerk.id,
-        email: user.email,
-        roles: authorities,
-        accessToken: token
-      };
-    });
+exports.findByToken= async (token,role)=>{
+  jwt.verify(token, config.secret, async (err, decoded) => {
+    if(err){
+      return err;
+    }
+    if(role==="clerk"){
+      let done= await clerkdb.findOne({ where: { id: decoded.id , token: token}});
+      console.log(done);
+      return done;
+    }else if(role==="hirer"){
+      hirerdb.findOne({ where: { id: decoded , token: token}}, (err, hirer)=>{
+        if(err){
+           return cb(err);
+        }
+        cb(null, hirer);
+      })
+    }});
+  }
+
+exports.deleteToken=(req, res)=>{
+  if(req.role ==="clerk"){
+    clerkdb.update({token: null}, {where: {id: req.params.id}}).then(data=>{
+      res.status(200).send(data);
+    }).catch(err=>{
+      res.status(500).send({ message: err.message });
+    })
+  }else if(req.role==="hirer"){
+    hirerdb.update({token: null}, {where: {id: req.params.id}}).then(data=>{
+      res.status(200).send(data);
+    }).catch(err=>{
+      res.status(500).send({ message: err.message });
+    })
+  }
 }
