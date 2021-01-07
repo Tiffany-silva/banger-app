@@ -1,0 +1,11 @@
+.product img{
+    height: 200px;
+    object-fit: contain;
+  }
+  .product{
+    min-width: 250px;
+    height: 450px;
+    text-align: center;
+    margin-bottom: 20px; /* same as fxLayoutGap for even distribution */
+  }
+  

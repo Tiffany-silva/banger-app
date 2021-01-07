@@ -1,0 +1,49 @@
+<app-nav-menu></app-nav-menu>
+<h1>MY BOOKINGS</h1>
+<mat-form-field>
+    <mat-select name="statusReactiveVaraible" [formControl]="selectedStatus" (ngModelChange)="filterBookings()" placeholder="Filter">
+      <mat-option *ngFor="let s of status" [value]="s">
+        {{s}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+ 
+  
+    <div class="container" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+       
+        <mat-card fxFlex="0 1 calc(20% - 20px)" *ngFor="let booking of obs | async; let i = index" class="product">
+            <mat-card-title>{{booking.vehicle.vehicleName}}</mat-card-title>
+
+            <img class="image" mat-card-image src="../../assets/car.jpg" alt="photo">
+            <mat-card-content>
+                <p>
+                    {{booking.bookingStatus}}
+                </p>
+                <p>
+                    {{booking.bookingDate}}
+                    </p>
+                <div>
+                    <a (click)="extendReturnDate(booking.returnDate, booking.id, booking.bookingStatus)">
+                        {{booking.returnDate}}
+                        </a>
+                        <div *ngIf="error===true">
+                            Vehicle Cannot Extend!
+                        </div>
+                </div>
+                    
+             
+                    <p>$ {{booking.totalPrice}}</p>
+               
+            
+                <div *ngFor="let additionalEquipment of booking.additionalEquipments; let i=index">
+                <p>{{additionalEquipment.equipmentType}}</p>
+                </div>
+
+            </mat-card-content>
+            <mat-card-actions align="end">
+            </mat-card-actions>
+            </mat-card>
+
+        
+    </div>
+    <mat-paginator [pageSizeOptions]="[4, 8]"></mat-paginator>
