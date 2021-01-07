@@ -1,0 +1,22 @@
+.container{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    // overflow-y: scroll;
+  }
+  
+  .product{
+    min-width: 180px;
+    height: 600px;
+    text-align: center;
+    margin-bottom: 20px; /* same as fxLayoutGap for even distribution */
+  }
+  
+  .product img{
+    height: 400px;
+    object-fit: contain;
+  }
+  ul {
+    list-style-type: none;
+    margin-top: 4px;
+  }

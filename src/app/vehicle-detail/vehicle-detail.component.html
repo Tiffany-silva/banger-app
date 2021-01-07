@@ -1,1 +1,72 @@
-<p>vehicle-detail works!</p>
+<app-nav-menu></app-nav-menu>
+
+<div class="container" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="5px">
+
+    <!-- Add addProduct-button outside loop -->
+
+    <mat-card fxFlex="0 1 calc(40% - 20px)" class="product">
+        <img class="image" mat-card-image src="../../assets/car.jpg" alt="photo">
+        <mat-card-content>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pellentesque lacinia diam vitae
+                tincidunt.
+                Praesent condimentum ultrices nunc in elementum. Mauris tempor tortor eu neque placerat, a lacinia dui
+                tempor.
+            </p>
+            <p>PRICE</p>
+        </mat-card-content>
+
+    </mat-card>
+    <mat-card fxFlex="0 1 calc(60% - 20px)" class="product">
+        <mat-form-field appearance="fill">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [min]="minDate" [max]="setMaxDate()">
+                <input matStartDate formControlName="start" placeholder="Start date">
+                <input matEndDate formControlName="end" placeholder="End date">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+
+            <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+            <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" (click)="getVehicleAvailability(range.controls.start.value, range.controls.end.value)" class="button" [disabled]="!range.valid">CHECK VEHICLE AVAILABILITY</button>
+
+
+        <p>Selected range: {{range.value | json}}</p>
+        <div>
+            <!-- <span style="font-size:32px;text-align:center">+<br />Add product</span> -->
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pellentesque lacinia diam vitae
+                tincidunt.
+                Praesent condimentum ultrices nunc in elementum. Mauris tempor tortor eu neque placerat, a lacinia dui
+                tempor.</p>
+            <p>VEHICLE TYPE: {{vehicleBookingDetails.vehicleType}}</p>
+            <p>AVAILABLE: {{vehicleBookingDetails.quantity}}</p>
+            <p>Additional Equipment</p>
+            <div>
+                <section class="example-section">
+                    <span class="example-list-section">
+                        <ul>
+                            <li *ngFor="let equipment of additionalEquipments">
+                                <mat-checkbox [(ngModel)]="equipment.reserve" color="primary">
+                                    {{equipment.equipmentType}} {{equipment.quantity}}
+                                </mat-checkbox>
+                            </li>
+                        </ul>
+                    </span>
+                </section>
+            </div>
+            <div>
+                <span>TOTAL </span>
+                <span>$ {{totalPrice}}</span>
+            </div>
+
+        </div>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="createBooking(range.controls.start.value, range.controls.end.value)"> RESERVE</button>
+
+          </mat-card-actions>
+    </mat-card>
+
+
+</div>
