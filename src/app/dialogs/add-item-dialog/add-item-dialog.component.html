@@ -1,0 +1,73 @@
+<p>add-item-dialog works!</p>
+<div class="container" *ngIf="data.item==='vehicle'">
+    <h3 mat-dialog-title>Add new Vehicle</h3>
+  
+    <form class="mat-dialog-content"  #formControl="ngForm">
+  
+      <div class="form">
+        <mat-form-field color="accent">
+          <input matInput #input class="form-control" placeholder="Vehicle Name" [(ngModel)]="data.vehicle.vehicleName" name="vehicleName" required >
+          <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+        </mat-form-field>
+      </div>
+  
+      <div class="form">
+            <mat-form-field color="accent">
+                <mat-label>Vehicle Type</mat-label>
+                <mat-select [(ngModel)]="data.vehicle.vehicleType" name="vehicleType">
+                  <mat-option *ngFor="let type of vehicleType" [value]="type">
+                    {{type}}
+                  </mat-option>
+                </mat-select>
+          </mat-form-field>
+      </div>
+  
+      <!--Contains mat-hint for characters count and has maxLength set-->
+      <div class="form">
+        <mat-form-field color="accent">
+          <input matInput #inputstate class="form-control" placeholder="Quantity" [(ngModel)]="data.vehicle.quantity" name="quantity" required>
+          <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+        </mat-form-field>
+      </div>
+
+         <!--Contains mat-hint for characters count and has maxLengt set-->
+         <div class="form">
+            <mat-form-field color="accent">
+              <input matInput #inputstate class="form-control" placeholder="Price" [(ngModel)]="data.vehicle.price" name="price" required >
+              <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+  
+  
+      <div mat-dialog-actions>
+        <button mat-button type="submit" [disabled]="!formControl.valid" [mat-dialog-close]="data">Add</button>
+        <button mat-button (click)="onNoClick()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+<div class="container"  *ngIf="data.item==='aEquipment'">
+    <h3 mat-dialog-title>Add new Additional Equipment</h3>
+  
+    <form class="mat-dialog-content"  #formControl="ngForm">
+  
+        <div class="form">
+            <mat-form-field color="accent">
+              <input matInput #inputstate class="form-control" placeholder="Equipment Type" [(ngModel)]="data.aEquipment.equipmentType" name="equipmentType" required>
+              <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+  
+      <div class="form">
+        <mat-form-field color="accent">
+          <input matInput #inputstate class="form-control" placeholder="Quantity" [(ngModel)]="data.aEquipment.quantity" name="quantity" required>
+          <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+        </mat-form-field>
+      </div>
+  
+      <div mat-dialog-actions>
+        <button mat-button type="submit" [disabled]="!formControl.valid" [mat-dialog-close]="data">Add</button>
+        <button mat-button (click)="onNoClick()">Cancel</button>
+      </div>
+    </form>
+  </div>
