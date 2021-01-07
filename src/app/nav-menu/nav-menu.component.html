@@ -1,0 +1,57 @@
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="mat-app-background">
+<mat-toolbar>
+	<mat-nav-list class="list-horizontal">
+     <mat-list-item>
+      <button class="logo" mat-menu-item>B A N G E R</button>
+    </mat-list-item>
+    <mat-list-item>
+      <button  mat-menu-item routerLink="/home">HOME</button>
+    </mat-list-item>
+
+    <mat-list-item>
+      <button mat-menu-item routerLink="/home">ABOUT</button>
+    </mat-list-item>
+    <mat-list-item>
+      <button mat-menu-item routerLink="/home">CONTACT</button>
+    </mat-list-item>
+	  <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="billsmenu" >ACCOUNT</button>
+    </mat-list-item>
+    <mat-menu #billsmenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <span routerLink="/profile">MY PROFILE</span>
+      </button>
+      <button mat-menu-item>
+        <span routerLink="/my-bookings">MY BOOKINGS</span>
+      </button>
+      <button mat-menu-item>
+        <span routerLink="/profile-settings">SETTINGS</span>
+      </button>
+    </mat-menu>
+
+    <div class="searchbar">
+ <mat-list-item>
+      <span class="material-icons">
+        search
+        </span>
+       <mat-form-field floatLabel="never" class="placeholder">
+        
+          <input matInput placeholder="Vehicle Type" >
+        </mat-form-field>
+    </mat-list-item>
+    </div>
+    <div  class="logout">
+      <mat-list-item>
+        <button mat-menu-item (click)="logout()">logout</button>
+      </mat-list-item>
+    </div>
+   
+
+  </mat-nav-list>
+  
+</mat-toolbar>
+</div>
+

@@ -1,0 +1,44 @@
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="mat-app-background">
+<mat-toolbar>
+	<mat-nav-list class="list-horizontal">
+     <mat-list-item>
+      <button class="logo" mat-menu-item>B A N G E R Clerk</button>
+    </mat-list-item>
+    <mat-list-item>
+      <button  mat-menu-item routerLink="/clerk-home">USER MANAGEMENT</button>
+    </mat-list-item>
+
+    <mat-list-item>
+      <button mat-menu-item routerLink="/clerk-item-management">ITEM MANAGEMENT</button>
+    </mat-list-item>
+    <mat-list-item>
+      <button mat-menu-item routerLink="/clerk-booking-management">BOOKING MANAGEMENT</button>
+    </mat-list-item>
+	  <mat-list-item>
+      <button mat-menu-item [matMenuTriggerFor]="billsmenu" >ACCOUNT</button>
+    </mat-list-item>
+    <mat-menu #billsmenu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <span>MY PROFILE</span>
+      </button>
+      <button mat-menu-item>
+        <span>SETTINGS</span>
+      </button>
+    </mat-menu>
+
+  
+    <div  class="logout">
+      <mat-list-item>
+        <button mat-menu-item (click)="logout()">logout</button>
+      </mat-list-item>
+    </div>
+   
+
+  </mat-nav-list>
+  
+</mat-toolbar>
+</div>
+
