@@ -8,7 +8,6 @@ const hirer=db.hirer;
 verifyToken = async (req, res, next) => {
     let token = req.headers["x-access-token"];
     // let role=req.headers["role"];
-    console.log(token)
   
     if (!token) {
       return res.status(403).send({
@@ -21,7 +20,6 @@ verifyToken = async (req, res, next) => {
           message: "Unauthorized!"
         });
       }
-      console.log(decoded.id);
       req.id = decoded.id;
       next();
     });
@@ -54,7 +52,6 @@ verifyToken = async (req, res, next) => {
 
 
 isClerk = (req, res, next) => {
-  console.log(req.id);
     clerk.findByPk(req.id).then(user => {
         if(user===null){
             res.status(403).send({

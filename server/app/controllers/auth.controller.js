@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 exports.signup=(req, res)=>{
+  console.log(req.body);
+
   if(req.body.role==="clerk"){
     registerClerk(req, res);
   }else if(req.body.role==="hirer"){
@@ -109,11 +111,10 @@ validateSignIn=async (req, res, user)=>{
         });
     } 
     if(user.token){
-      res.status(400).json({  error: true, message: "already logged in"});
+      res.status(400).send({  error: true, message: "already logged in"});
     }else{
       let role=user.role.name;
       let token= await this.generateToken(user, role);
-        console.log(token +"jiiii");
      
       let response={
           id: user.id,
@@ -133,7 +134,6 @@ validateSignIn=async (req, res, user)=>{
 exports.generateToken=async (user,role)=>{
 
   let token = jwt.sign({ id: user.id }, config.secret);
-  console.log(token);
   if(role==="clerk"){
     let done=await clerkdb.update({token: token}, {where: {id: user.id}});
     if(done) return token;
@@ -151,7 +151,6 @@ exports.findByToken= async (token,role)=>{
     }
     if(role==="clerk"){
       let done= await clerkdb.findOne({ where: { id: decoded.id , token: token}});
-      console.log(done);
       return done;
     }else if(role==="hirer"){
       hirerdb.findOne({ where: { id: decoded , token: token}}, (err, hirer)=>{
@@ -164,13 +163,14 @@ exports.findByToken= async (token,role)=>{
   }
 
 exports.deleteToken=(req, res)=>{
-  if(req.role ==="clerk"){
+  console.log(req.body.role);
+  if(req.body.role ==="clerk"){
     clerkdb.update({token: null}, {where: {id: req.params.id}}).then(data=>{
       res.status(200).send(data);
     }).catch(err=>{
       res.status(500).send({ message: err.message });
     })
-  }else if(req.role==="hirer"){
+  }else if(req.body.role==="hirer"){
     hirerdb.update({token: null}, {where: {id: req.params.id}}).then(data=>{
       res.status(200).send(data);
     }).catch(err=>{

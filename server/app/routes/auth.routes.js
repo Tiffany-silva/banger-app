@@ -19,5 +19,8 @@ const routerAuth=require("express").Router();
         controller.signup
   );
 
-    routerAuth.post("/signin", controller.signin);
+    routerAuth.post("/login", controller.signin);
+
+    routerAuth.post("/logout/:id", controller.deleteToken);
+    
 module.exports=routerAuth;
