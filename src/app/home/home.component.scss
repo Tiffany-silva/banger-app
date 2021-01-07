@@ -1,0 +1,19 @@
+.content { 
+    padding: 16px; 
+  }
+  
+  .content > mat-card { 
+    width: 200px; 
+  }
+
+  .vehicle{
+    min-width: 300px;
+    height: 400px;
+    text-align: center;
+    margin-bottom: 20px; /* same as fxLayoutGap for even distribution */
+  }
+  
+  .vehicle img{
+    height: 150px;
+    object-fit: contain;
+  }
