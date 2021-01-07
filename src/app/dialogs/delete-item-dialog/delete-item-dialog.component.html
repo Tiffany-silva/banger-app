@@ -1,0 +1,36 @@
+<div class="container" *ngIf="item==='vehicle'">
+    <h3 mat-dialog-title>Are you sure?</h3>
+    <div mat-dialog-content>
+      Name: {{data.vehicleName}}
+      <p></p>
+      Vehicle Type: {{data.vehicleType}}
+      <p></p>
+      Quantity: {{data.quantity}}
+      <p></p>
+      Price: {{data.price}}
+      <p></p>
+    </div>
+  
+    <div mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="1">Delete</button>
+      <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
+  </div>
+
+  <div class="container" *ngIf="item==='aEquipment'">
+    <h3 mat-dialog-title>Are you sure?</h3>
+  
+    <div mat-dialog-content>
+      Equipment Type: {{data.aeType}}
+      <p></p>
+      Quantity: {{data.quantity}}
+      <p></p>
+    </div>
+  
+    <div mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="1">Delete</button>
+      <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
+  </div>
+  
+  
