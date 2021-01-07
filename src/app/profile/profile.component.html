@@ -1,1 +1,53 @@
-<p>profile works!</p>
+<app-nav-menu></app-nav-menu>
+<div class="section1">
+    <h1>MY PROFILE</h1>
+    <mat-card >
+        <img  mat-card-image src="../../assets/woman.jpg" alt="photo">
+        <mat-card-content>
+            <div *ngIf="myProfile">
+                <p>{{myProfile.firstName}} {{myProfile.lastName}}</p>
+                <p>{{myProfile.dob}}</p>
+                <p>{{myProfile.role}}</p>
+                <p>{{myProfile.address}}</p>
+                <p>{{myProfile.email}}</p>
+                <p *ngIf="myProfile.confirmIdentity==true">Identity Confirmed</p>
+                <p *ngIf="myProfile.confirmIdentity==false">Identity Cofirmation Pending</p>    
+            </div>
+            
+        </mat-card-content>
+
+    </mat-card>
+    </div>
+    <div class="section2">
+    <h1>MY BOOKINGS</h1>
+    <div class="container" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="10px">
+       
+        <mat-card fxFlex="0 1 calc(20% - 20px)" *ngFor="let booking of obs | async; let i = index" class="product">
+                      <mat-card-title>{{booking.vehicle.vehicleName}}</mat-card-title>
+
+          <img class="image" mat-card-image src="../../assets/car.jpg" alt="photo">
+          <mat-card-content>
+            <p>
+              {{booking.bookingStatus}}
+            </p>
+            <p>
+                {{booking.bookingDate}}
+              </p>
+              <p>
+                {{booking.returnDate}}
+              </p>
+              <p>
+               $ {{booking.totalPrice}}
+              </p>
+              <div *ngFor="let additionalEquipment of booking.additionalEquipments; let i=index">
+                <p>{{additionalEquipment.equipmentType}}</p>
+              </div>
+
+          </mat-card-content>
+          <mat-card-actions align="end">
+          </mat-card-actions>
+        </mat-card>
+        
+    </div>
+    <mat-paginator [pageSizeOptions]="[4, 8]"></mat-paginator>
+    </div>
