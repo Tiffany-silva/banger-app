@@ -1,0 +1,36 @@
+<div class="container" *ngIf="user==='hirer'">
+    <h3 mat-dialog-title>Are you sure?</h3>
+    <div mat-dialog-content>
+      Name: {{data.firstName}} {{data.lastName}}
+      <p></p>
+      Email: {{data.email}}
+      <p></p>
+      Role: Hirer
+      <p></p>
+    </div>
+  
+    <div mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="1">Delete</button>
+      <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
+  </div>
+
+  <div class="container" *ngIf="user==='clerk'">
+    <h3 mat-dialog-title>Are you sure?</h3>
+  
+    <div mat-dialog-content>
+      Name: {{data.name}}
+      <p></p>
+      Email: {{data.email}}
+      <p></p>
+      Role: Clerk
+      <p></p>
+    </div>
+  
+    <div mat-dialog-actions>
+      <button mat-button [mat-dialog-close]="1">Delete</button>
+      <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
+  </div>
+  
+  
