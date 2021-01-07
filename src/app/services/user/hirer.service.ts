@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const baseUrl = 'http://localhost:8080/api/clerk/';
+const baseUrl = 'http://localhost:8080/api/hirer';
 @Injectable({
   providedIn: 'root'
 })
@@ -34,6 +34,9 @@ export class HirerService {
     return this.http.put(`${baseUrl}/updateAddress/${id}`, data);
   }
   
+  checkIfBlacklisted(id:any): Observable<any> {
+    return this.http.get(`${baseUrl}/isBlacklisted/${id}`);
+  }
 
   getAllBlacklisted(): Observable<any> {
     return this.http.get(baseUrl+'findAllBlacklisted');
@@ -50,7 +53,7 @@ export class HirerService {
     return this.http.get(baseUrl);
   }
 
-  BlackListUser(id:any, data:any): Observable<any> {
+  blackListUser(id:any, data:any): Observable<any> {
     return this.http.put(`${baseUrl}/blackList/${id}`, data);
   }
   create(data:any): Observable<any> {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const baseUrl = 'http://localhost:8080/api/clerk/';
+const baseUrl = 'http://localhost:8080/api/additionalEquipment';
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +27,8 @@ export class AdditionalEquipmentService {
   }
 
   createAEquipment(data:any): Observable<any> {
-    return this.http.post(baseUrl,data);
+    console.log(data);
+    return this.http.post(baseUrl,{equipmentType:data.equipmentType, quantity:data.quantity});
   }
 
   deleteAEquipment(id:any): Observable<any> {
@@ -36,6 +37,10 @@ export class AdditionalEquipmentService {
 
   deleteAllAEquipments(): Observable<any> {
     return this.http.delete(baseUrl);
+  }
+
+  getAvailableEquipments(start:any, end:any): Observable<any> {
+    return this.http.get(`${baseUrl}/getAvailableEquipments`, {params: {startdate: start, enddate: end}});
   }
 
 }
