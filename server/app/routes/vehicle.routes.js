@@ -15,7 +15,7 @@
     // Create a new vehicle
     vehicleRouter.post("/",[authJwt.verifyToken, authJwt.isClerk], vehicle.create);
 
-    vehicleRouter.get("/findAllBookingsofVehicle", [authJwt.verifyToken, authJwt.isClerk],vehicle.findAllBookingsofVehicle);
+    vehicleRouter.get("/findAllBookingsofVehicle/:id", [authJwt.verifyToken],vehicle.findAllBookingsofVehicle);
   
     // Retrieve all vehicle
     vehicleRouter.get("/",[authJwt.verifyToken], vehicle.findAll);

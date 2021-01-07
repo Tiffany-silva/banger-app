@@ -5,7 +5,7 @@ const vehicle=db.vehicle;
 
 // Create and Save a new Vehicle
 exports.create = (req, res) => {
-	// Validate request
+  // Validate request
 	if (!req.body) {
 		res.status(400).send({
 			message: 'Content can not be empty!',
@@ -14,10 +14,10 @@ exports.create = (req, res) => {
 	}
 	// Create a vehicle
     let newVehicle = {
-      vehicleName:req.body.vehicleName, 
-      vehicleType:req.body.vehicleType, 
-      quantity:req.body.quantity, 
-      price:req.body.price
+      vehicleName:req.body._vehicleName, 
+      vehicleType:req.body._vehicleType, 
+      quantity:req.body._quantity, 
+      price:req.body._price
     }
 
     console.log(newVehicle)
@@ -98,6 +98,7 @@ exports.deleteAll=(req, res) =>{
 
 
 exports.updatePrice=(req, res)=>{
+    console.log(req);
     vehicle.update({ price: req.body.price }, {
         where: {
           id: req.params.id
@@ -132,7 +133,7 @@ exports.updateQuantity=(req, res)=>{
 
 // Find all bookings of vehicles
 exports.findAllBookingsofVehicle=(req, res)=>{ 
-	vehicle.findAll({ where: { id: res.params.id }, include: {
+	vehicle.findAll({ where: { id: req.params.id }, include: {
       model: booking }})
     .then(data => {
       res.send(data);

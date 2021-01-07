@@ -14,7 +14,7 @@ routerClerk.use(function(req, res, next) {
 // routerClerk.post("/", [authJwt.verifyToken, authJwt.isClerk], clerks.create);
 
 // Retrieve all clerks
-routerClerk.get("/", [authJwt.verifyToken, authJwt.isClerk], clerks.findAll);
+routerClerk.get("/", [authJwt.verifyToken], clerks.findAll);
 
 // Retrieve a single clerk with id
 routerClerk.get("/:id", [authJwt.verifyToken, authJwt.isClerk], clerks.findOne);

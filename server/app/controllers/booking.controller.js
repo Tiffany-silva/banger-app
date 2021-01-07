@@ -9,11 +9,17 @@
 
 const db = require("../db.Models");
 const differenceInCalendarDays = require('date-fns/differenceInCalendarDays')
+const eachDayOfInterval=require('date-fns/eachDayOfInterval');
 const parseISO = require('date-fns/parseISO');
+var startOfDay = require('date-fns/startOfDay')
+var endOfDay = require('date-fns/endOfDay')
+var toDate = require('date-fns/toDate')
+var isWithinInterval = require('date-fns/isWithinInterval')
 const booking = db.booking;
 const additionalEquipment = db.additionalEquipment;
 const vehicle = db.vehicle;
 const hirer = db.hirer;
+const Op = db.Sequelize.Op;
 
 /**
  *@description {creates and save the submitted booking}
@@ -28,38 +34,27 @@ const hirer = db.hirer;
     });
     return;
   }
+  console.log(req.body);
 
   // Create a Booking
   let bookingVehicle = {
-    hirerId: req.body.hirerId,
-    bookingStatus: req.body.bookingStatus,
-    bookingDate: req.body.bookingDate,
-    returnDate: req.body.returnDate,
-    totalPrice: calculatePrice(req.body.bookingDate,req.body.returnDate, req.body.vehicleCost),
-    vehicleId: req.body.vehicleId,
+    hirerId: req.body._hirerId,
+    bookingStatus: req.body._status,
+    bookingDate: req.body._bookedDate,
+    returnDate: req.body._returnDate,
+    totalPrice: req.body._totalPrice,
+    vehicleId: req.body._vehicleID,
   };
 
 	try{
 		const result =  await db.sequelize.transaction(async (t) => {
-
-			//Reserve additional Equipments if booked
-			if (req.body.additionalEquipmentId) {
-				req.body.additionalEquipmentId.map((aequipment) => {
-					additionalEquipment
-						.decrement("quantity", { by: 1, where: { id: aequipment },transaction: t});
-				});
-			};
 			
-			//Reserve vehicle
-			await vehicle.decrement("quantity", { by: 1, where: { id: req.body.vehicleId }, transaction:t});
-			
-
 			//Save the booking
 			let book= await booking.create(bookingVehicle, {transaction: t});
 			
 			//save the additional equipments and booking
-			if (req.body.additionalEquipmentId) {
-				await book.addAdditionalEquipments(req.body.additionalEquipmentId, {transaction: t});
+			if (req.body._additionalEquipment) {
+				await book.addAdditionalEquipments(req.body._additionalEquipment, {transaction: t});
 			}
 		});
 
@@ -67,7 +62,7 @@ const hirer = db.hirer;
 	}catch(error){
 		res.status(500).send({
 			message:
-			error.message && "Some error occurred while creating the Booking.",
+			error.message,
 		});
 	}
 };
@@ -79,7 +74,7 @@ const hirer = db.hirer;
  * @param {response consisting of bookings} res 
  */
 exports.findAll = (req, res) => {
-  booking.findAll().then((bookings) => res.json(bookings));
+  booking.findAll({include: [additionalEquipment, vehicle, hirer]}).then((bookings) => res.json(bookings));
 };
 
 /**
@@ -88,7 +83,6 @@ exports.findAll = (req, res) => {
  * @param {response consisting of bookings} res 
  */
 exports.findOne = (req, res) => {
-  console.log(req);
   const id = req.params.id;
 
   booking
@@ -193,24 +187,50 @@ exports.updateBookingStatus = (req, res) => {
     });
 };
 
-exports.extendReturnDate = (req, res) => {
+exports.extendReturnDate = async (req, res) => {
+
+  try{
+		const result =  await db.sequelize.transaction(async (t) => {
+			
+			//Save the booking
+			await booking.update({ returnDate: req.body.returnDate },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }, {transaction: t});
+			 await booking.update({ bookingStatus: "Extended"},
+          {
+            where: {
+              id: req.params.id,
+            },
+          }, {transaction: t});
+		});
+
+		res.send(result);
+	}catch(error){
+		res.status(500).send({
+			message:
+			error.message,
+		});
+	}
+};
+
+// Find all available Booking
+exports.findAllForStatusOfUser = (req, res) => {
   booking
-    .update(
-      { returnDate: req.body.returnDate },
-      {
-        where: {
-          id: req.params.id,
-        },
-      }
-    )
+    .findAll({
+      where: { bookingStatus: req.query.bookingStatus, hirerId: req.query.id },
+      include: [additionalEquipment, vehicle],
+      order:[['updatedAt','DESC']]
+    })
     .then((data) => {
+
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message ||
-          "Some error occurred while updating Booking Return Date.",
+        message: err.message || "Some error occurred while retrieving Booking.",
       });
     });
 };
@@ -219,8 +239,9 @@ exports.extendReturnDate = (req, res) => {
 exports.findAllForStatus = (req, res) => {
   booking
     .findAll({
-      where: { bookingStatus: req.body.bookingStatus },
-      include: [additionalEquipment, vehicle, hirer],
+      where: { bookingStatus: req.query.bookingStatus},
+      include: [additionalEquipment, vehicle],
+      order:[['updatedAt','DESC']]
     })
     .then((data) => {
       res.send(data);
@@ -232,18 +253,26 @@ exports.findAllForStatus = (req, res) => {
     });
 };
 
+
+exports.findAllBookingsOfUser = (req, res) => {
+  booking
+    .findAll({
+      where: { hirerId: req.params.id },
+      include: [additionalEquipment, vehicle],
+    })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Bookings.",
+      });
+    });
+};
+
 exports.completeBooking = async(req, res) => {
 	try{
 		const result =  await db.sequelize.transaction(async (t) => {
-			// return additional equipment
-			if (req.body.additionalEquipmentId) {
-				req.body.additionalEquipmentId.map((aequipment) => {
-					additionalEquipment
-						.increment("quantity", { by: 1, where: { id: aequipment },transaction: t});
-				});
-			};
-			//return vehicle
-			await vehicle.increment("quantity", { by: 1, where: { id: req.body.vehicleId }, transaction:t});
 			
 			//mark booking completed
 			await booking.update({ bookingStatus: req.body.bookingStatus },{ where: {id: req.params.id}, transaction:t});
@@ -265,3 +294,188 @@ calculatePrice =(bookedDate, returnDate, vehicleCost)=>{
 	let totalDays=differenceInCalendarDays(returningDate, bookingDate);
 	 return totalDays * vehicleCost;
 }
+
+
+getDatesInRange=(start,end)=>{
+ let s=toDate(start);
+ let e=toDate(end);
+  var result = eachDayOfInterval({
+    start: s,
+    end: e
+  })
+  return result;
+}
+
+exports.getAvailableVehicles= (req, res)=>{
+  let startDate=parseISO(req.body.startdate);
+  let endDate=parseISO(req.body.enddate);
+  let requested=getDatesInRange(startDate,endDate);
+  console.log(requested);
+  vehicle.findAll().then( vehiclesList=>{
+    let vehicles=vehiclesList;
+     booking.findAll({
+      where: {
+        bookingStatus: "Booked"  
+      }
+      }).then(bookedVehicles=>{
+          console.log(bookedVehicles);
+      bookedVehicles.forEach(element => {
+        requested.some(function (book){
+          let isDateExist=isWithinInterval(book, {
+            start:element.bookingDate,
+            end: element.returnDate
+          })
+          console.log(isDateExist);
+          if(isDateExist===true){
+            console.log(element.vehicleId)
+            let index=vehicles.findIndex(item => item.id === element.vehicleId);
+            console.log(index);
+            console.log(vehicles[index]);
+            if(index!=-1){
+              vehicles[index].quantity-=1; 
+              console.log(vehicles[index]);       
+            } 
+            return isDateExist;  
+          };       
+        })
+        console.log("booking" + element.id);
+    })
+    res.send(vehicles);
+    }).catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while checking available vehicles.",
+      });
+    });
+  });
+}
+
+exports.getAvailableEquipments= (req, res)=>{
+  let startDate=parseISO(req.body.startdate);
+  let endDate=parseISO(req.body.enddate);
+
+  let requested=getDatesInRange(startDate,endDate);
+  additionalEquipment.findAll().then( list=>{
+    let aeList=list;
+     booking.findAll({
+      where: {
+          bookingStatus: "Booked"
+      },include:{
+        model:additionalEquipment, through: {attributes: []}
+      }
+    }).then(bookings=>{
+      console.log(bookings)
+      bookings.forEach(element => {
+       
+        if(Array.isArray(element.additionalEquipments) && element.additionalEquipments.length>0){
+         
+          requested.some(function (el){
+        
+            let isDateExist=isWithinInterval(el, {
+                  start: (element.bookingDate),
+                  end: (element.returnDate)
+                })
+     
+            if(isDateExist===true){
+              element.additionalEquipments.forEach(ae=>{
+                let index=aeList.findIndex(item => item.id === ae.id);
+                if(index!=-1){
+                  aeList[index].quantity-=1; 
+                  console.log(aeList[index]);
+                }  
+              });
+              return isDateExist;  
+            }
+          }) 
+          }
+        }
+        
+    )
+    res.send(aeList);
+    }).catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while checking available equipments.",
+      });
+    });
+  });
+}
+
+exports.getAvailabilityOfVehicle= (req, res)=>{
+  let startDate=parseISO(req.body.startdate);
+  let endDate=parseISO(req.body.enddate);
+  let id=req.body.id;
+  let requested=getDatesInRange(startDate,endDate);
+  let bookingCount=[];
+  vehicle.findOne({ where: { id: id } }).then( vehicle=>{
+    let vehicleBooking=vehicle;
+     booking.findAll({
+      where: {
+        [Op.and]:[
+         { bookingStatus: "Booked"},
+          {vehicleId: id}
+        ],
+      },attributes: ['id','bookingDate', 'returnDate']
+    }).then(bookings=>{
+      bookings.forEach(element => {
+        requested.forEach(book=>{
+          let isDateAvailable=isWithinInterval(book, {
+            start:element.bookingDate,
+            end: element.returnDate
+          })
+          if(isDateAvailable===true){
+            let count = bookingCount.find(count => count.booking === element.id);
+            if(count){
+              count.count=count.count+1;
+            }else{
+              let count={booking:element.id, count:1}
+              bookingCount.push(count);
+            }        
+          }
+        })
+  
+    })
+      bookingCount.forEach(element=>{
+        if(element.count>0){
+          vehicleBooking.quantity-=1; 
+        }
+      })
+    
+    res.send(vehicleBooking);
+    }).catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while checking availability of Vehicle.",
+      });
+    });
+  });
+}
+
+
+exports.checkForBookingAvailability= (req, res)=>{
+
+  let start=startOfDay(parseISO(req.query.date));
+  let end=endOfDay(parseISO(req.query.date));
+    
+     booking.findAll({
+      where: {
+        [Op.and]:[
+         { bookingStatus: "Booked"},
+         {
+           bookingDate: { 
+          [Op.gt]: start,
+          [Op.lt]: end
+          }
+         }
+        ]
+      }
+    }).then(data=>{
+     console.log(data);
+    res.send(data);
+    }).catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while checking availability of Booking.",
+      });
+    });
+  }

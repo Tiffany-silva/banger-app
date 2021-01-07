@@ -4,7 +4,8 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new additional equipment
 exports.create =(req, res) => {
-	// Validate request
+  // Validate request
+  console.log(req.body);
 	if (!req.body) {
 		res.status(400).send({
 			message: 'Content can not be empty!',

@@ -52,10 +52,10 @@ db.hirer.belongsTo(db.role);
 
 db.ROLES = ["clerk", "hirer"];
 
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
   .then(() => {
     console.log(`Database & tables created!`)
-    initial();
+    // initial();
     }
 )
 function initial() {

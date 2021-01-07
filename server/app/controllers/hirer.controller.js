@@ -87,7 +87,7 @@ exports.update =(req, res)=> {
 // Delete a Hirer with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
-
+  console.log(id)
   hirer.destroy({ where: { id: id } })
     .then(num => {
       if (num == 1) {
@@ -221,6 +221,7 @@ exports.findAllBlacklisted=(req, res)=> {
 }
 
 exports.blackList=(req, res)=>{
+  console.log(req.body.blackListed);
   hirer.update({ blackListed: req.body.blackListed }, {
       where: {
         id: req.params.id
@@ -257,6 +258,25 @@ exports.findAllBookingsOfHirer=(req, res)=>{
     });
 }
 
+exports.isBlacklisted = (req, res) => {
+  const id = req.params.id;
+
+  hirer
+    .findOne({
+      where: { id: id },
+      attributes: ['blackListed']
+      
+    } )
+    .then((data) => {
+      console.log(data)
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Error retrieving Booking with id=" + id,
+      });
+    });
+};
 
 
 
