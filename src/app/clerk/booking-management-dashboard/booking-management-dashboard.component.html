@@ -1,0 +1,124 @@
+<app-nav-clerk-menu></app-nav-clerk-menu>
+<h1>BOOKING MANAGEMENT</h1>
+
+  <div class="container mat-elevation-z8">
+  
+    <div class="form">
+        <mat-form-field color="accent">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Filter Bookings" #input>
+        </mat-form-field>
+    </div>
+  
+    <table mat-table #table [dataSource]="dataSource" multiTemplateDataRows matSort #sort="matSort" class="mat-cell">
+        
+      <ng-container matColumnDef="bookingStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Booking Status</th>
+        <td mat-cell *matCellDef="let row" >{{row.bookingStatus}}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="bookingDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Booking Date</th>
+        <td mat-cell *matCellDef="let row"> {{row.bookingDate}}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="returnDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Return Date</th>
+        <td mat-cell *matCellDef="let row"> {{row.returnDate}}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="totalPrice">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Price</th>>
+        <td mat-cell *matCellDef="let row"> ${{row.totalPrice}}</td>>
+      </ng-container>
+      <ng-container matColumnDef="hirer">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hirer</th>>
+        <td mat-cell *matCellDef="let row"> {{row.hirer.firstName}} {{row.hirer.lastName}}</td>>
+      </ng-container>
+      <ng-container matColumnDef="vehicle">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Vehicle</th>>
+        <td mat-cell *matCellDef="let row"> {{row.vehicle.vehicleName}}</td>>
+      </ng-container>
+      <ng-container matColumnDef="equipments">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Equipments</th>>
+        <td mat-cell *matCellDef="let row">
+            <span *ngIf="row.additionalEquipments.length===0">
+                --
+            </span>
+            <span *ngFor="let equipment of row.additionalEquipments">
+                {{equipment.equipmentType}}
+            </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
+        <td mat-cell *matCellDef="let row"> {{row.createdAt}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+          <div class="example-element-detail"
+               [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            <div class="example-element-description">
+              <div > Booking Date: {{element.bookingDate}} </div>
+              <div > Return Date: {{element.returnDate}} </div>
+              <div >Total Price: ${{element.totalPrice}} </div>
+              
+            </div>
+            <div class="example-element-description">
+                <div>Vehicle Information</div>
+                <div > Vehicle Name: {{element.vehicle.vehicleName}} </div>
+                <div > Vehicle Type: {{element.vehicle.vehicleType}} </div>                
+            </div>
+              <div class="example-element-description">
+                <div *ngIf="element.additionalEquipments.length!=0">
+                    <div>Equipment Information</div> 
+                    <div *ngFor="let equipment of element.additionalEquipments">
+                    <div>Equipment Type: {{equipment.equipmentType}}</div>
+                    <div>Quantity: {{equipment.quantity}}</div>
+                    </div>
+                </div>      
+              </div>
+              <div class="example-element-description">
+                <div>Hirer Information</div>
+                <div > Name: {{element.hirer.firstName}} {{element.hirer.lastName}}</div>
+                <div > Email: {{element.hirer.email}} </div>    
+                <div *ngIf="element.hirer.blackListed===true"> Blacklisted: Yes </div>  
+                <div *ngIf="element.hirer.blackListed===false"> Blacklisted: No </div>                          
+            </div>
+            <div class="example-element-description">
+              <span class="example-element-description-attribution"> Booking Status: {{element.bookingStatus}} </span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+         <mat-cell *matCellDef="let row; let i=index;">
+          <button mat-icon-button color="accent" (click)="startEdit( row.id,row.hirer.id, row.hirer.blackListed, row.bookingStatus)">
+            <mat-icon aria-label="Edit">edit</mat-icon>
+          </button>
+     
+          <!-- <button mat-icon-button color="accent" (click)="deleteItem(row.id, row.firstName, row.lastName, row.email)">
+            <mat-icon aria-label="Delete">delete</mat-icon>
+          </button> -->
+        </mat-cell> 
+    </ng-container>
+
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+          class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element"
+          (click)="expandedElement = expandedElement === element ? null : element">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+  
+    <mat-paginator #paginator
+                   [pageIndex]="0"
+                   [pageSize]="10"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+  </div>
