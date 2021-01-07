@@ -1,0 +1,21 @@
+
+
+<div mat-dialog-content> 
+    <mat-form-field [formGroup]="range" class="example-full-width" appearance="fill">
+        <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date" 
+        formControlName="extendDate" [min]="minDate" [max]="maxDate">
+        <mat-datepicker-toggle matSuffix [for]="$any(picker)"></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #picker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+          [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond" [touchUi]="touchUi"
+          [color]="color" [enableMeridian]="enableMeridian">
+        </ngx-mat-datetime-picker>
+      </mat-form-field>
+
+<p>Selected range: {{range.value | json}}</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="range.controls.extendDate.value" cdkFocusInitial>Extend</button>
+</div>
+
+
