@@ -11,9 +11,8 @@ const booking = require("../server/app/routes/booking.routes");
 const auth=require("../server/app/routes/auth.routes");
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: true 
 };
-
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
