@@ -6,7 +6,7 @@ export enum Role {
 
 export class Clerk {
     
-    private _clerkId:string='';
+    private _id:string='';
     private _name:string='';
     private _email:string='';
     private _password:string='';
@@ -25,11 +25,11 @@ export class Clerk {
     }
 
     public get id(){
-        return this._clerkId;
+        return this._id;
     }
 
     public set id(id:string){
-        this._clerkId=id;
+        this._id=id;
     }
 
     public set email(email:string){

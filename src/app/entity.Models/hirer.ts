@@ -2,7 +2,7 @@ import { Role } from './clerk';
 
 export class Hirer {
     
-    private hirerId:string='';
+    private _id!: string;
     private _firstName:string='';
     private _lastName:string='';
     private _email:string='';
@@ -68,11 +68,11 @@ export class Hirer {
     }
 
     public get id(){
-        return this.hirerId;
+        return this._id;
     }
 
     public set id(id:string){
-        this.hirerId=id;
+        this._id=id;
     }
 
     public set dob(dob:Date){

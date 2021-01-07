@@ -5,26 +5,26 @@ export enum AEType {
 }
 
 export class AdditionalEquipment {
-    private additionalEquipmentId:string='';
-    private _aetype!: AEType;
+    private _id:string='';
+    private _aetype: string='';
     private _quantity:number= 0;
 
     constructor(){
     }
 
     public get id():string{
-        return this.additionalEquipmentId;
+        return this._id;
     }
 
     public set id(id:string){
-        this.additionalEquipmentId=id;
+        this._id=id;
     }
 
-    public set aEType(aetype:AEType){
+    public set equipmentType(aetype:string){
         this._aetype=aetype;
     }
 
-    public get aEType(){
+    public get equipmentType(){
         return this._aetype;
     }
 

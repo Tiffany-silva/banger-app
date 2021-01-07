@@ -1,36 +1,36 @@
 export enum Status {
-    AVAILABLE ="available",
-    UNAVAILABLE="unavailable",
-    BOOKED = "booked",
-    EXTENDED = "extended",
-    RETURNED= "returned"
+    CANCELLED ="Cancelled",
+    BOOKED = "Booked",
+    EXTENDED = "Extended",
+    COMPLETED= "Completed",
+    PICKED = "Picked"
 }
 
 export class Booking {
-    private bookingId:string='';
-    private _userID:string='';
-    private _additionalEquipment!: string;
+    private _id?:string;
+    private _hirerId:string='';
+    private _additionalEquipment!: string[];
     private _vehicleID: string='';
-    private _status: Status = Status.AVAILABLE;
+    private _status: Status;
     private _bookedDate!: Date;
     private _returnDate!: Date;
     private _totalPrice:Number=0;
     constructor(){
     }
 
-    public get userID():string{
-        return this._userID;
+    public get hirerId():string{
+        return this._hirerId;
     }
 
-    public set userID(userID:string){
-        this._userID=userID;
+    public set hirerId(userID:string){
+        this._hirerId=userID;
     }
 
-    public set additionalEquipment(additionalEquipment:string){
+    public set additionalEquipment(additionalEquipment:string[]){
         this._additionalEquipment=additionalEquipment;
     }
 
-    public get additionalEquipment():string{
+    public get additionalEquipment():string[]{
         return this._additionalEquipment;
     }
 
@@ -50,19 +50,19 @@ export class Booking {
         return this._returnDate;
     }
 
-    public get bookedDate():Date{
+    public get bookingDate():Date{
         return this._bookedDate;
     }
 
-    public set bookedDate(bookedDate:Date){
+    public set bookingDate(bookedDate:Date){
         this._bookedDate=bookedDate;
     }
     public get id(){
-        return this.bookingId;
+        return this._id;
     }
 
     public set id(id:string){
-        this.bookingId=id;
+        this._id=id;
     }
 
     public set totalPrice(total:Number){

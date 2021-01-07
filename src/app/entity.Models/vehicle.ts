@@ -6,19 +6,27 @@ export enum VehicleType {
 }
 
 export class Vehicle {
-    private _vehicleId:string='';
+    private _id:string='';
     private _vehicleName:string='';
-    private _vehicleType:VehicleType=VehicleType.DIESEL_AUTO;
+    private _vehicleType:VehicleType;
     private _quantity:number=0;
     private _price:number=0.0;
-
+    private _available:boolean=true;
     constructor(){
     }
-
-    public get vehicleId(){
-        return this._vehicleId;
+public get available(){
+    return this._available;
+}
+public set available(available:boolean){
+    this._available=available;
+}
+    public get id(){
+        return this._id;
     }
 
+    public set id(id:string){
+        this._id=id;
+    }
     public set vehicleName(vehicleName:string){
         this._vehicleName=vehicleName;
     }
