@@ -7,7 +7,7 @@ import { Hirer } from '../entity.Models/hirer';
 const AUTH_API = 'http://localhost:8080/api/auth/';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' , 'Access-Control-Allow-Origin': '*'})
 };
 @Injectable({
   providedIn: 'root'
@@ -17,15 +17,17 @@ export class AuthService {
   
     constructor(private http: HttpClient) { }
   
-    login(credentials: { email: any; password: any; role:any }): Observable<any> {
-      return this.http.post(AUTH_API + 'signin', {
+    login(credentials: { email: any; password: any;}): Observable<any> {
+      return this.http.post(AUTH_API + 'login', {
         email: credentials.email,
         password: credentials.password,
-        role: credentials.role
       }, httpOptions);
     }
   
     registerClerk(user: Clerk): Observable<any> {
+      console.log("1111111")
+      console.log(user);
+
       return this.http.post(AUTH_API + 'signup', {
         name: user.name,
         email: user.email,
@@ -35,6 +37,8 @@ export class AuthService {
     }
 
     registerHirer(user: Hirer): Observable<any> {
+      console.log('-------');
+      console.log(user);
       return this.http.post(AUTH_API + 'signup', {
         firstName: user.firstName,
         lastName: user.lastName,
@@ -50,5 +54,10 @@ export class AuthService {
       }, httpOptions);
     }
 
+    logout(role:any, id:any):Observable<any>{
+      console.log("im hereeee")
+      console.log(role)
+      return this.http.post(AUTH_API+"logout/"+id,role);
+    }
 
 }

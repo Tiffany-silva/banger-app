@@ -28,7 +28,9 @@ export class TokenStorageService {
   }
 
   public getUser(): any {
-    return JSON.parse(sessionStorage.getItem(USER_KEY));
+    let user=sessionStorage.getItem(USER_KEY);
+    // return JSON.parse(user);
+    return user;
   }
 }
 
