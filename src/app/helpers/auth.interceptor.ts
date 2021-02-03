@@ -13,11 +13,15 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authReq = req;
-    const token = this.token.getToken();
-    if (token != null) {
+    if(req.url.indexOf('https://api.imgbb.com/1/upload') !== -1) {
+      return next.handle(req);
+    } else{
+      const token = this.token.getToken();
+      if (token != null) {
         authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, token) });
       }
-      return next.handle(authReq)
+    }
+    return next.handle(authReq);
   }
 }
 
