@@ -29,10 +29,22 @@ export class TokenStorageService {
 
   public getUser(): any {
     let user=sessionStorage.getItem(USER_KEY);
-    // return JSON.parse(user);
     return user;
+  }
+
+  public isAuthenticated(): boolean {
+    const token =this.getToken();
+    console.log(token);
+    if(token!=null){
+      return true;
+    }else{
+      return false;
+    }
+    // Check whether the token is expired and return
+    // true or false
+    // return !this.jwtHelper.isTokenExpired(token);
   }
 }
 
 
- 
+
