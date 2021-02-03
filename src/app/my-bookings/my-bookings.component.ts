@@ -1,15 +1,15 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { formatISO, parse, parseISO } from 'date-fns';
-import { Observable } from 'rxjs';
-import { ExtendReturnDateDialogComponent } from '../dialogs/extend-return-date-dialog/extend-return-date-dialog.component';
-import { Status } from '../entity.Models/booking';
-import { BookingService } from '../services/booking/booking.service';
-import { TokenStorageService } from '../services/token-storage.service';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+import {Router} from '@angular/router';
+import {formatISO, parseISO} from 'date-fns';
+import {Observable} from 'rxjs';
+import {ExtendReturnDateDialogComponent} from '../dialogs/extend-return-date-dialog/extend-return-date-dialog.component';
+import {Status} from '../entity.Models/booking';
+import {BookingService} from '../services/booking/booking.service';
+import {TokenStorageService} from '../services/token-storage.service';
 
 @Component({
   selector: 'app-my-bookings',
@@ -21,16 +21,16 @@ export class MyBookingsComponent implements OnInit {
   myBookings:any=[];
   id:any;
   error:boolean=false;
-  
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     obs: Observable<any>;
     dataSource: MatTableDataSource<any>;
     selectedStatus:any;
-    status:Status[]=[Status.CANCELLED, Status.BOOKED, Status.EXTENDED, Status.COMPLETED, Status.PICKED];
-  constructor(private router: Router,private dialog: MatDialog,private changeDetectorRef: ChangeDetectorRef, private tokenService:TokenStorageService, private bookingService:BookingService) { 
+    status:Status[]=[Status.CANCELLED, Status.BOOKED,Status.PENDING, Status.EXTENDED, Status.COMPLETED, Status.PICKED];
+  constructor(private router: Router,private dialog: MatDialog,private changeDetectorRef: ChangeDetectorRef, private tokenService:TokenStorageService, private bookingService:BookingService) {
     this.id= JSON.parse(this.tokenService.getUser()).id;
     this.selectedStatus = new FormControl(this.status);
-   
+
   }
 
   ngAfterViewInit():void{
@@ -45,10 +45,11 @@ export class MyBookingsComponent implements OnInit {
       data.forEach((element:any) => {
         element.bookingDate= formatISO(parseISO(element.bookingDate), { representation: 'date' });
         element.returnDate=  formatISO(parseISO(element.returnDate), { representation: 'date' });
+        element["extendError"]=false;
       });
       this.myBookings=data;
       this.setPaginationData(this.myBookings);
-      
+
     })
   }
 
@@ -82,14 +83,17 @@ export class MyBookingsComponent implements OnInit {
               });;
             });
           }
-          
+
         });
-        return this.error=false;
       }else if(status!=Status.PICKED && (bookingAvailable===false)){
-        return this.error=true;
+        const index = this.myBookings.map((booking: { id: any; }) => booking.id).indexOf(id);
+        console.log(index)
+        this.myBookings[index].extendError=true;
       }else{
-        return this.error=true;
-      }   
+        const index = this.myBookings.map((booking: { id: any; }) => booking.id).indexOf(id);
+        console.log(index)
+        this.myBookings[index].extendError=true;
+      }
   }
 
   checkIfBookingAlreadyAvailable(date:any):boolean{

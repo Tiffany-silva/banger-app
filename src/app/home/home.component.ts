@@ -17,12 +17,13 @@ export class HomeComponent implements OnInit {
   maxDate:Date;
   range:FormGroup;
   availableVehicles:Boolean=false;
-  
+  error:any;
+
   constructor(private vehicleService:VehicleService, private bookingService:BookingService) {
-  
+
 
     this.minDate = new Date();
-   
+
     this.range = new FormGroup({
       start: new FormControl(),
       end: new FormControl()
@@ -55,30 +56,35 @@ export class HomeComponent implements OnInit {
       console.log(this.vehicleList)
       console.log(this.vehicleList[1].id)
     })
-   
+
   }
 
 
   checkAvailableVehicles(start:any, end:any){
-  
-    this.availableVehicles=true;
-    let ss=formatISO9075(start);
-    let ee=formatISO9075(end);
+    if(start==null && end==null){
+      this.error="Please select a date range";
+    }else{
+      this.error=null;
+      this.availableVehicles=true;
+      let ss=formatISO9075(start);
+      let ee=formatISO9075(end);
 
-    console.log(ss);
-    console.log(ee);
-    let req={startdate: ss, enddate:ee}
-    this.bookingService.getAvailableVehicles(req).subscribe(availableList=>{
-      availableList.forEach((element: any) => {
-        if(element.quantity == 0){
-          element.available=false;
-        }else{
-          element.available=true;
-        }
-      });
-      this.availableList=availableList;
+      console.log(ss);
+      console.log(ee);
+      let req={startdate: ss, enddate:ee}
+      this.bookingService.getAvailableVehicles(req).subscribe(availableList=>{
+        availableList.forEach((element: any) => {
+          if(element.quantity == 0){
+            element.available=false;
+          }else{
+            element.available=true;
+          }
+        });
+        this.availableList=availableList;
 
-    })
+      })
+    }
+
   }
 
   getDatesInRange(start:any,end:any){

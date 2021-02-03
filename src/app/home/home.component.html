@@ -1,6 +1,8 @@
 <app-nav-menu></app-nav-menu>
-
-  <mat-form-field appearance="fill">
+<div class="row">
+  <div class="col-sm-3"></div>
+  <div class="col-sm-6 p-5 bg-light">
+  <mat-form-field appearance="fill" style="width: 100%;">
     <mat-label>Enter a date range</mat-label>
     <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [min]="minDate" [max]="setMaxDate()">
       <input matStartDate  formControlName="start" placeholder="Start date">
@@ -8,13 +10,15 @@
     </mat-date-range-input>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-date-range-picker #picker></mat-date-range-picker>
-  
+
     <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
     <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
   </mat-form-field>
   <button mat-raised-button color="primary" type="submit" (click)="checkAvailableVehicles(range.controls.start.value, range.controls.end.value)" class="button" [disabled]="!range.valid">CHECK VEHICLE AVAILABILITY</button>
-
-  <p>Selected range: {{range.value | json}}</p>
+    <div align="center" style="color: red; font-weight: lighter">{{error}}</div>
+  </div>
+  <div class="col-sm-3"></div>
+</div>
   <div *ngIf="availableVehicles==false">
 <div class="content" fxLayout="row wrap" fxLayoutGap="5px grid">
     <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let vehicle of vehicleList">
@@ -22,13 +26,13 @@
         <mat-card-header>
           <mat-card-title style="font-size: medium;">{{vehicle?.vehicleName}}</mat-card-title>
         </mat-card-header>
-        <img mat-card-image src="../../assets/car.jpg">
+        <img mat-card-image src={{vehicle?.imageURL}}>
         <mat-card-content >
           <p>
            Vehicle Type     {{vehicle?.vehicleType}}
           </p>
-          <p>Available      {{vehicle?.quantity}}</p>
-          <p>Price          {{vehicle?.price}}</p>
+          <p>Available     {{vehicle?.quantity}}</p>
+          <p>Price   $ {{vehicle?.price}}</p>
         </mat-card-content>
         <mat-card-actions>
           <button mat-button color="accent" routerLink="/vehicle-detail/{{vehicle.id}}">View More</button>
@@ -45,21 +49,20 @@
       <mat-card-header>
         <mat-card-title style="font-size: medium;">{{vehicle?.vehicleName}}</mat-card-title>
       </mat-card-header>
-      <img mat-card-image src="../../assets/car.jpg">
+      <img mat-card-image src={{vehicle?.imageURL}}>
       <mat-card-content>
         <p *ngIf="vehicle?.vehicleType!=null">
-          {{vehicle?.vehicleType}}
+          Vehicle Type {{vehicle?.vehicleType}}
         </p>
-        <p *ngIf="vehicle.available">{{vehicle?.quantity}}</p>
+        <p *ngIf="vehicle.available">Available {{vehicle?.quantity}}</p>
         <p *ngIf="!vehicle.available">BOOKED OUT</p>
-        <p>{{vehicle?.price}}</p>
+        <p>Price $ {{vehicle?.price}}</p>
       </mat-card-content>
       <mat-card-actions>
         <button *ngIf="vehicle.available" mat-button color="accent" routerLink="/vehicle-detail/{{vehicle.id}}">Make Booking</button>
-        <button *ngIf="vehicle.available" mat-button>SHARE</button>
       </mat-card-actions>
     </mat-card>
   </div>
 </div>
 </div>
-  
+<app-about-us-footer></app-about-us-footer>

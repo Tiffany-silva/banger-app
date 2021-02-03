@@ -1,42 +1,45 @@
 <app-nav-menu></app-nav-menu>
-<h1>MY BOOKINGS</h1>
-<mat-form-field>
+<h1 align="center" style="padding-top: 10px">My Bookings</h1>
+<mat-divider></mat-divider>
+<mat-form-field style="padding-left: 15px">
     <mat-select name="statusReactiveVaraible" [formControl]="selectedStatus" (ngModelChange)="filterBookings()" placeholder="Filter">
       <mat-option *ngFor="let s of status" [value]="s">
         {{s}}
       </mat-option>
     </mat-select>
   </mat-form-field>
- 
-  
-    <div class="container" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
-       
-        <mat-card fxFlex="0 1 calc(20% - 20px)" *ngFor="let booking of obs | async; let i = index" class="product">
-            <mat-card-title>{{booking.vehicle.vehicleName}}</mat-card-title>
 
-            <img class="image" mat-card-image src="../../assets/car.jpg" alt="photo">
+
+    <div class="container" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+
+        <mat-card fxFlex="0 1 calc(20% - 20px)" *ngFor="let booking of obs | async; let i = index" class="product">
+            <mat-card-title style="font-size: 20px">{{booking.vehicle.vehicleName}}</mat-card-title>
+
+            <img class="image" mat-card-image src={{booking.vehicle?.imageURL}} alt="photo">
             <mat-card-content>
                 <p>
-                    {{booking.bookingStatus}}
+                    Status - {{booking.bookingStatus}}
                 </p>
-                <p>
-                    {{booking.bookingDate}}
+                <p style="font-weight: lighter">
+                    Booked Date - {{booking.bookingDate}}
                     </p>
-                <div>
-                    <a (click)="extendReturnDate(booking.returnDate, booking.id, booking.bookingStatus)">
+                <div class="extendReturnDate">Return Date -
+                    <a  style="color: #3366cc; text-decoration: underline"(click)="extendReturnDate(booking.returnDate, booking.id, booking.bookingStatus)">
                         {{booking.returnDate}}
                         </a>
-                        <div *ngIf="error===true">
+                        <div style="color:red;" *ngIf="booking.extendError">
                             Vehicle Cannot Extend!
                         </div>
                 </div>
-                    
-             
                     <p>$ {{booking.totalPrice}}</p>
-               
-            
+              <div *ngIf="booking.additionalEquipments.length>0" style="font-weight: lighter">
+                Additional Equipment Added
+              </div>
+              <div *ngIf="booking.additionalEquipments.length===0" style="font-weight: lighter;">
+                No Additional Equipment Added
+              </div>
                 <div *ngFor="let additionalEquipment of booking.additionalEquipments; let i=index">
-                <p>{{additionalEquipment.equipmentType}}</p>
+                <div>{{additionalEquipment.equipmentType}}</div>
                 </div>
 
             </mat-card-content>
@@ -44,6 +47,7 @@
             </mat-card-actions>
             </mat-card>
 
-        
+
     </div>
     <mat-paginator [pageSizeOptions]="[4, 8]"></mat-paginator>
+<app-about-us-footer></app-about-us-footer>
