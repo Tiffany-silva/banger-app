@@ -1,0 +1,20 @@
+
+<div class="container">
+  <h3 mat-dialog-title align="center" >{{data.title}}</h3>
+  <mat-divider></mat-divider>
+  <div *ngIf="content.type==='confirm'">
+    <div align="center">Are you sure?</div>
+    <div mat-dialog-actions align="center">
+      <button mat-button [mat-dialog-close]="1">Confirm</button>
+      <button mat-button [mat-dialog-close]="-1">Cancel</button>
+    </div>
+  </div>
+  <div *ngIf="content.type==='Message'">
+
+    <div>{{content.message}}</div>
+    <div mat-dialog-actions align="center">
+      <button mat-button [mat-dialog-close]="1">OK</button>
+    </div>
+  </div>
+
+</div>

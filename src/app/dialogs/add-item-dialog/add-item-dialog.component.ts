@@ -11,14 +11,14 @@ import { VehicleType } from '../../entity.Models/vehicle';
 export class AddItemDialogComponent implements OnInit {
 
   vehicleType:VehicleType[]=[VehicleType.DIESEL_AUTO, VehicleType.HYBRID, VehicleType.PETROL, VehicleType.PETROL_MANUAL];
-
+  image:any;
 
   constructor(public dialogRef: MatDialogRef<AddItemDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
-    
+
   ngOnInit(): void {
   }
-  
+
 
   formControl = new FormControl('', [
     Validators.required
@@ -33,5 +33,9 @@ export class AddItemDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  selectImage(event: any) {
+    this.data.vehicle.imageURL = event.target.files;
   }
 }
