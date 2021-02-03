@@ -13,6 +13,7 @@ import { AdditionalEquipment } from '../../entity.Models/additionalEquipment';
 import { Vehicle } from '../../entity.Models/vehicle';
 import { AdditionalEquipmentService } from '../../services/additionalEquipment/additional-equipment.service';
 import { VehicleService } from '../../services/vehicle/vehicle.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-item-management-dashboard',
@@ -21,7 +22,7 @@ import { VehicleService } from '../../services/vehicle/vehicle.service';
 })
 export class ItemManagementDashboardComponent implements OnInit {
 
-  displayedColumns = [ 'vehicleName', 'vehicleType', 'quantity', 'price', 'createdAt', 'actions'];
+  displayedColumns = [ 'vehicleName', 'vehicleType', 'quantity', 'price', 'imageURL', 'createdAt', 'actions'];
 
   displayedColumnsAE = [ 'equipmentType', 'quantity','createdAt', 'actions'];
 
@@ -29,8 +30,8 @@ export class ItemManagementDashboardComponent implements OnInit {
   id: number;
   @ViewChild('sort') sort: MatSort;
   @ViewChild('sortAE') sortAE: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatPaginator) paginatorAE: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginatorAE') paginatorAE: MatPaginator;
 
     obs: Observable<any>;
     dataSource: MatTableDataSource<any>;
@@ -45,7 +46,7 @@ export class ItemManagementDashboardComponent implements OnInit {
 
   constructor(public dialogService: MatDialog,private router: Router,
     public dataService: VehicleService, private changeDetectorRef: ChangeDetectorRef,
-    private changeDetectorRefAE: ChangeDetectorRef, private aeService:AdditionalEquipmentService,) {
+    private changeDetectorRefAE: ChangeDetectorRef, private aeService:AdditionalEquipmentService,private authService: AuthService) {
 
   }
 
@@ -56,7 +57,7 @@ export class ItemManagementDashboardComponent implements OnInit {
   }
 
   ngAfterViewInit():void{
-    
+
   }
   getData(){
     this.dataService.getAllVehicles().subscribe(data=>{
@@ -118,11 +119,14 @@ export class ItemManagementDashboardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(result)
       if (result) {
-        this.dataService.createVehicle(result).subscribe(data=>{
-          this.router.navigate(['/clerk-item-management']).then(() => {
-            window.location.reload();
-          });
-        })   
+        this.authService.uploadImageAndGetURL(result.vehicle.imageURL).subscribe(url=>{
+          result.vehicle.imageURL=url;
+          this.dataService.createVehicle(result.vehicle).subscribe(data=>{
+            this.router.navigate(['/clerk-item-management']).then(() => {
+              window.location.reload();
+            });
+          })
+        })
       }
     });
   }
@@ -140,7 +144,7 @@ export class ItemManagementDashboardComponent implements OnInit {
           this.router.navigate(['/clerk-item-management']).then(() => {
             window.location.reload();
           });
-        })   
+        })
       }
     });
   }
@@ -152,11 +156,11 @@ export class ItemManagementDashboardComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-  
+
       console.log('The dialog was closed');
           console.log(result);
           if(result.price !=price && result.quantity==quantity){
-         
+
             this.dataService.updatePrice(id, result.price).subscribe(data=>{
               console.log(data);
               this.router.navigate(['/clerk-item-management']).then(() => {
@@ -184,7 +188,7 @@ export class ItemManagementDashboardComponent implements OnInit {
               });
             });
           }
-              
+
       });
   }
   startEditAE(id:number, quantity:number){
@@ -198,12 +202,12 @@ export class ItemManagementDashboardComponent implements OnInit {
 
 
     });
-  
+
   }
 
 
   deleteItem( id: number, vehicleName: string, vehicleType: string, quantity: number, price:number) {
-  
+
     const dialogRef = this.dialogService.open(DeleteItemDialogComponent, {
       width: '400px',
       data: {id:id,vehicleName: vehicleName, vehicleType: vehicleType, quantity: quantity, price:price, item:"vehicle"}
@@ -217,12 +221,12 @@ export class ItemManagementDashboardComponent implements OnInit {
             window.location.reload();
           });
         });
-        
+
       }
     });
   }
   deleteAequipment( id: number, aeType: string, quantity: number) {
-  
+
     const dialogRef = this.dialogService.open(DeleteItemDialogComponent, {
       width: '400px',
       data: {id:id, aeType: aeType, quantity: quantity, item: "aEquipment"}
@@ -236,7 +240,7 @@ export class ItemManagementDashboardComponent implements OnInit {
             window.location.reload();
           });
        });
-        
+
       }
     });
   }
