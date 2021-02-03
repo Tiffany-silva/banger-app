@@ -14,10 +14,11 @@ exports.create = (req, res) => {
 	}
 	// Create a vehicle
     let newVehicle = {
-      vehicleName:req.body._vehicleName, 
-      vehicleType:req.body._vehicleType, 
-      quantity:req.body._quantity, 
-      price:req.body._price
+      vehicleName:req.body._vehicleName,
+      vehicleType:req.body._vehicleType,
+      quantity:req.body._quantity,
+      price:req.body._price,
+      imageURL: req.body._imageURL
     }
 
     console.log(newVehicle)
@@ -42,7 +43,7 @@ exports.findAll = (req, res) => {
  }
 
 // Find a single Vehicle with an id
-exports.findOne = (req, res)=> { 
+exports.findOne = (req, res)=> {
 	const id = req.params.id;
 
   vehicle.findOne({ where: { id: id } }).then(data => {
@@ -80,7 +81,7 @@ exports.delete = (req, res) => {
 };
 
 // Delete all Vehicles from the database.
-exports.deleteAll=(req, res) =>{ 
+exports.deleteAll=(req, res) =>{
 	vehicle.destroy({
 		where: {},
 		truncate: false
@@ -132,7 +133,7 @@ exports.updateQuantity=(req, res)=>{
 }
 
 // Find all bookings of vehicles
-exports.findAllBookingsofVehicle=(req, res)=>{ 
+exports.findAllBookingsofVehicle=(req, res)=>{
 	vehicle.findAll({ where: { id: req.params.id }, include: {
       model: booking }})
     .then(data => {

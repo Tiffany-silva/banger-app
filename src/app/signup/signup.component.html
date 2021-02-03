@@ -1,61 +1,84 @@
-
-<div>Sign up</div>
-<div class="container" novalidate *ngIf="isSuccessful===false"> 
-  <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form">
-
-    <mat-form-field class="form-element">
-      <input matInput placeholder="First Name" formControlName="firstName">
-      <mat-error *ngIf="!firstName.valid && firstName.touched">
-        {{ titleAlert }}
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field class="form-element">
-      <input matInput placeholder="Last Name" formControlName="lastName">
-      <mat-error *ngIf="!lastName.valid && lastName.touched">
-        {{ titleAlert }}
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput [matDatepicker]="picker1" placeholder="Date of Birth" formControlName="date">
-      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker #picker1></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field class="form-element">
-      <input matInput placeholder="Address" formControlName="address">
-      <mat-error *ngIf="!formGroup.controls['address'].valid && formGroup.controls['address'].touched">
-        Required field, must be more than 5 characters.
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field class="form-element">
-      <input matInput placeholder="Email" formControlName="email">
-      <mat-error *ngIf="!formGroup.controls['email'].valid && formGroup.controls['email'].touched">
-        {{ getErrorEmail() }}
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field class="form-element">
-      <input matInput placeholder="Password" formControlName="password">
-      <mat-hint>Choose a password of at least eight characters, one uppercase letter and one number</mat-hint>
-      <mat-error *ngIf="!formGroup.controls['password'].valid && formGroup.controls['password'].touched">
-        {{ getErrorPassword() }}
-      </mat-error>
-    </mat-form-field>
-
-    <div class="form-element">
-      <mat-checkbox formControlName="validate" value="1">Name min. 3 characters</mat-checkbox>
-    </div>
-
-    <div class="form-element">
-      <button mat-raised-button color="primary" type="submit" class="button" [disabled]="!formGroup.valid">Submit Form</button>
-    </div>
-
-  </form>
-</div>
-<div *ngIf="isSuccessful">
-  Your registration is successful!
-</div>
-<!-- <ng-template #forminfo>
-  <div class="container">
-    {{ post | json }}
+<div class="bg">
+  <div *ngIf="isSuccessful">
+    Your registration is successful!
   </div>
-</ng-template> -->
+  <h1 align="end" style="padding-top: 1%; padding-right: 5%;font-size: 45px">B A N G E R</h1>
+  <mat-divider style="padding-bottom: 1%"></mat-divider>
+
+  <div class="row mb-5" style="width: 99%;">
+    <div class="col-sm-4">
+
+    </div>
+    <div class="col-sm-4  bg-light rounded shadow">
+      <div class="text-center h3 pt-3" style="color: #3366cc; font-weight: lighter">Sign Up | Banger</div>
+      <mat-divider></mat-divider>
+      <div class="container" novalidate *ngIf="isSuccessful===false">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form">
+
+          <mat-form-field class="form-element">
+            <input matInput placeholder="First Name" formControlName="firstName">
+            <mat-error *ngIf="!firstName.valid && firstName.touched">
+              {{ titleAlert }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="form-element">
+            <input matInput placeholder="Last Name" formControlName="lastName">
+            <mat-error *ngIf="!lastName.valid && lastName.touched">
+              {{ titleAlert }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-element">
+            <input matInput placeholder="NIC Number" formControlName="nic">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput [max]="maxDate" [matDatepicker]="picker1" placeholder="Date of Birth" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field class="form-element">
+            <input matInput placeholder="Address" formControlName="address">
+            <mat-error *ngIf="!formGroup.controls['address'].valid && formGroup.controls['address'].touched">
+              Required field, must be more than 5 characters.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-element">
+            <input matInput placeholder="Email" type="email" formControlName="email">
+            <mat-error *ngIf="!formGroup.controls['email'].valid && formGroup.controls['email'].touched">
+              {{ getErrorEmail() }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="form-element">
+            <input matInput placeholder="Password" type="password" formControlName="password">
+            <mat-hint>Choose a password of at least eight characters, one uppercase letter and one number</mat-hint>
+            <mat-error *ngIf="!formGroup.controls['password'].valid && formGroup.controls['password'].touched">
+              {{ getErrorPassword() }}
+            </mat-error>
+          </mat-form-field>
+
+          <div>
+            <label style="padding-top: 14px; color: #3366cc; font-size: 13px; font-weight:lighter;">Upload Profile picture</label>
+          </div>
+          <label>
+            <input type="file" (change)="selectFile($event)" />
+          </label>
+          <div class="form-element">
+            <button mat-raised-button color="primary" type="submit" class="button" [disabled]="!formGroup.valid">Submit Form</button>
+            <div align="center" style="padding-top: 10px;"><a routerLink="/login">login instead?</a></div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-4">
+
+    </div>
+  </div>
+  <!-- <ng-template #forminfo>
+    <div class="container">
+      {{ post | json }}
+    </div>
+  </ng-template> -->
+
+</div>

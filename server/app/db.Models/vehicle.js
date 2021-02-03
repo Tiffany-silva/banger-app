@@ -4,6 +4,7 @@ module.exports = (sequelize, Sequelize) => {
         vehicleType: Sequelize.STRING,
         quantity: Sequelize.INTEGER,
         price: Sequelize.DOUBLE,
+        imageURL: Sequelize.STRING
     });
     return Vehicle;
 }
