@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   isLoggedIn: boolean;
   isLoginFailed: boolean;
   role: any;
-  constructor(private formBuilder: FormBuilder, private authService:AuthService, private router: Router, private tokenStorage: TokenStorageService) { }
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private tokenStorage: TokenStorageService) { }
 
   ngOnInit() {
     this.createForm();
@@ -52,10 +52,10 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(post: any) {
-        const user={
+        const user = {
           'email':post.email,
           'password': post.password
-        }
+        };
       this.authService.login(user).subscribe(
         data => {
           this.tokenStorage.saveToken(data.accessToken);
@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
           this.isSuccessful = true;
           if(this.role==="clerk"){
             this.router.navigate(['/clerk-home']);
-          }else if(this.role==="hirer"){
+          }else if(this.role=== "hirer"){
             this.router.navigate(['/home']);
 
           }
