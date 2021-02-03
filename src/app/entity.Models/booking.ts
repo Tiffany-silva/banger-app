@@ -3,7 +3,8 @@ export enum Status {
     BOOKED = "Booked",
     EXTENDED = "Extended",
     COMPLETED= "Completed",
-    PICKED = "Picked"
+    PICKED = "Picked",
+    PENDING ="Pending"
 }
 
 export class Booking {
@@ -15,10 +16,29 @@ export class Booking {
     private _bookedDate!: Date;
     private _returnDate!: Date;
     private _totalPrice:Number=0;
+    private _licenseNumber:String;
+
     constructor(){
     }
 
-    public get hirerId():string{
+
+  get bookedDate(): Date {
+    return this._bookedDate;
+  }
+
+  set bookedDate(value: Date) {
+    this._bookedDate = value;
+  }
+
+  get licenseNumber(): String {
+    return this._licenseNumber;
+  }
+
+  set licenseNumber(value: String) {
+    this._licenseNumber = value;
+  }
+
+  public get hirerId():string{
         return this._hirerId;
     }
 
@@ -41,7 +61,7 @@ export class Booking {
     public get status(){
         return this._status;
     }
-    
+
     public set returnDate(returnDate:Date){
         this._returnDate=returnDate;
     }
@@ -72,7 +92,7 @@ export class Booking {
     public get totalPrice():Number{
         return this._totalPrice;
     }
-    
+
     public set vehicleID(vehicleid:string){
         this._vehicleID=vehicleid;
     }
@@ -80,6 +100,6 @@ export class Booking {
     public get vehicleID(){
         return this._vehicleID;
     }
-    
+
 
 }

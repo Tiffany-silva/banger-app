@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const baseUrl = 'http://localhost:8080/api/booking';
+const externalUrl = 'http://localhost:8080/api/external';
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +26,7 @@ export class BookingService {
   extendReturnDate(id:any, returnDate:any): Observable<any> {
     return this.http.put(`${baseUrl}/extendReturnDate/${id}`, {returnDate: returnDate});
   }
-  
+
   getAllBookings(): Observable<any> {
     return this.http.get(baseUrl);
   }
@@ -37,14 +38,14 @@ export class BookingService {
   getAllForStatus(status:any): Observable<any> {
     return this.http.get(`${baseUrl}/findAllForStatus`, {params: {bookingStatus: status}});
   }
-  findAllBookingsOfUser(id:any): Observable<any> {
-    return this.http.get(`${baseUrl}/findAllBookingsOfUser/${id}`);
+  findAllBookingsOfUser(email:any): Observable<any> {
+    return this.http.get(`${baseUrl}/findAllBookingsOfUser/${email}`);
   }
 
   getBooking(id:any): Observable<any> {
     return this.http.get(`${baseUrl}/${id}`);
   }
-  
+
   createBooking(data:any): Observable<any> {
     return this.http.post(baseUrl,data);
   }
@@ -72,5 +73,11 @@ export class BookingService {
     return this.http.post(`${baseUrl}/getAvailableEquipments`, requestedBooking);
   }
 
+  isUserInDMVList(id:any, date:any, image:any, licenseNumber:any): Observable<any> {
+    return this.http.post(`${externalUrl}/isUserInDMVList`, {id: id,date: date, image: image, licenseNumber: licenseNumber});
+  }
+  checkForFraudClaims(identityNumber:any, bookingId:any): Observable<any> {
+    return this.http.post(`${externalUrl}/checkForFraudClaims`, {identityNumber: identityNumber, id: bookingId});
+  }
 
 }

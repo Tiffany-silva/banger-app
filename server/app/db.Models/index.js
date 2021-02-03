@@ -1,5 +1,12 @@
-const dbConfig = require("../configuration/config.db.js");
+/**
+ * index.js
+ * @author: Supeshala Silva
+ * @date: 19-11-2020
+ * @description: This represents the database configuration, creation and table initializations
+ *               Includes all the table creations with relationships
+ */
 
+const dbConfig = require("../configuration/config.db.js");
 const Sequelize = require("sequelize");
 const bookingModel = require("./booking.js");
 const clerkModel = require("./clerk.js");
@@ -7,7 +14,6 @@ const vehicleModel = require("./vehicle.js");
 const additionalEquipmentModel = require("./additionalEquipment.js");
 const hirerModel=require("./hirer.js");
 const roleModel=require("./role");
-
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
@@ -25,7 +31,6 @@ const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-
 
 db.hirer = hirerModel(sequelize, Sequelize);
 db.booking = bookingModel(sequelize, Sequelize);
@@ -50,6 +55,7 @@ db.clerk.belongsTo(db.role);
 db.role.hasMany(db.hirer);
 db.hirer.belongsTo(db.role);
 
+
 db.ROLES = ["clerk", "hirer"];
 
 sequelize.sync({ force: false })
@@ -63,7 +69,7 @@ function initial() {
     id: 1,
     name: "hirer"
   });
- 
+
   db.role.create({
     id: 2,
     name: "clerk"

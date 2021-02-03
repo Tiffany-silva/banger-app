@@ -5,7 +5,7 @@
     <!-- Add addProduct-button outside loop -->
 
     <mat-card fxFlex="0 1 calc(40% - 20px)" class="product">
-        <img class="image" mat-card-image src="../../assets/car.jpg" alt="photo">
+        <img class="image" mat-card-image src={{vehicleBookingDetails.imageURL}} alt="photo">
         <mat-card-content>
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pellentesque lacinia diam vitae
@@ -31,9 +31,9 @@
             <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
         </mat-form-field>
         <button mat-raised-button color="primary" type="submit" (click)="getVehicleAvailability(range.controls.start.value, range.controls.end.value)" class="button" [disabled]="!range.valid">CHECK VEHICLE AVAILABILITY</button>
+        <div align="center" style="color: red; font-weight: lighter">{{errorMessage}}</div>
 
-
-        <p>Selected range: {{range.value | json}}</p>
+<!--        <p>Selected range: {{range.value | json}}</p>-->
         <div>
             <!-- <span style="font-size:32px;text-align:center">+<br />Add product</span> -->
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pellentesque lacinia diam vitae
@@ -60,6 +60,13 @@
                 <span>TOTAL </span>
                 <span>$ {{totalPrice}}</span>
             </div>
+          <div>
+
+            <span>Driving License ID Number</span>
+            <mat-form-field>
+              <input matInput placeholder="Driving License ID"  [(ngModel)]="drivingLicenseID" #ctrl="ngModel" required>
+            </mat-form-field>
+          </div>
 
         </div>
         <mat-card-actions>
@@ -67,6 +74,6 @@
 
           </mat-card-actions>
     </mat-card>
-
-
 </div>
+
+<app-about-us-footer></app-about-us-footer>

@@ -12,14 +12,24 @@ export class Vehicle {
     private _quantity:number=0;
     private _price:number=0.0;
     private _available:boolean=true;
+    private _imageURL: string;
     constructor(){
     }
-public get available(){
-    return this._available;
-}
-public set available(available:boolean){
-    this._available=available;
-}
+
+  get imageURL(): string {
+    return this._imageURL;
+  }
+
+  set imageURL(value: string) {
+    this._imageURL = value;
+  }
+
+  public get available(){
+       return this._available;
+    }
+    public set available(available:boolean){
+        this._available=available;
+    }
     public get id(){
         return this._id;
     }
