@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -19,7 +18,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MyBookingsComponent } from './my-bookings/my-bookings.component';
-import { ExtendReturnDateDialogComponent } from '../app/dialogs/extend-return-date-dialog/extend-return-date-dialog.component';
+import { ExtendReturnDateDialogComponent } from './dialogs/extend-return-date-dialog/extend-return-date-dialog.component';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { DeleteDialogComponent } from './dialogs/user-clerk/delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from './dialogs/user-clerk/edit-dialog/edit-dialog.component';
@@ -30,6 +29,10 @@ import { AddItemDialogComponent } from './dialogs/add-item-dialog/add-item-dialo
 import { EditItemDialogComponent } from './dialogs/edit-item-dialog/edit-item-dialog.component';
 import { DeleteItemDialogComponent } from './dialogs/delete-item-dialog/delete-item-dialog.component';
 import { BookingManagementDashboardComponent } from './clerk/booking-management-dashboard/booking-management-dashboard.component';
+import { DialogBoxComponent } from './dialogs/dialog-box/dialog-box.component';
+import { NotificationsComponent } from './dialogs/notifications/notifications.component';
+import { RateComparisonsComponent } from './clerk/rate-comparisons/rate-comparisons.component';
+import { AboutUsFooterComponent } from './about-us-footer/about-us-footer.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,11 @@ import { BookingManagementDashboardComponent } from './clerk/booking-management-
     AddItemDialogComponent,
     EditItemDialogComponent,
     DeleteItemDialogComponent,
-    BookingManagementDashboardComponent
+    BookingManagementDashboardComponent,
+    DialogBoxComponent,
+    NotificationsComponent,
+    RateComparisonsComponent,
+    AboutUsFooterComponent
   ],
   entryComponents:[ExtendReturnDateDialogComponent],
   imports: [

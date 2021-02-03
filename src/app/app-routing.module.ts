@@ -11,57 +11,47 @@ import { ProfileSettingsComponent } from './profile-settings/profile-settings.co
 import { ProfileComponent } from './profile/profile.component';
 import { SignupComponent } from './signup/signup.component';
 import { VehicleDetailComponent } from './vehicle-detail/vehicle-detail.component';
+import {RateComparisonsComponent} from './clerk/rate-comparisons/rate-comparisons.component';
+import {AuthGuardService} from './services/auth-guard.service';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: LoginComponent,
-},
-{
-    path: 'login',
-    component: LoginComponent,
-},
-{
-  path: 'signup',
-  component: SignupComponent,
-},
-{
-  path: 'home',
-  component: HomeComponent,
-},
-{
-  path: 'nav',
-  component: NavMenuComponent,
-},
-{
-  path: 'vehicle-detail/:id',
-  component: VehicleDetailComponent,
-},
-{
-  path: 'profile',
-  component: ProfileComponent,
-},
-{
-  path: 'profile-settings',
-  component: ProfileSettingsComponent,
-},
-{
-  path:'my-bookings',
-  component:MyBookingsComponent
-},
-{
-  path:'clerk-home',
-  component:ClerkHomeComponent
-},
-{
-  path:'clerk-item-management',
-  component:ItemManagementDashboardComponent
-},
-{
-  path:'clerk-booking-management',
-  component:BookingManagementDashboardComponent
-}
-
+  {path: '', component: LoginComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'signup', component: SignupComponent,},
+  {path: 'home', component: HomeComponent},
+  {path: 'nav', component: NavMenuComponent},
+  {path: 'vehicle-detail/:id', component: VehicleDetailComponent,},
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService],
+    data: {
+      role: 'hirer'
+    }
+  },
+  {path: 'profile-settings', component: ProfileSettingsComponent, canActivate: [AuthGuardService]},
+  {path:'my-bookings', component:MyBookingsComponent, canActivate: [AuthGuardService],
+    data: {
+      role: 'hirer'
+    }
+  },
+  {path:'clerk-home', component:ClerkHomeComponent, canActivate: [AuthGuardService],
+    data: {
+      role: 'clerk'
+    }
+  },
+  {path:'clerk-item-management', component:ItemManagementDashboardComponent, canActivate: [AuthGuardService],
+    data: {
+       role: 'clerk'
+    }
+  },
+  {path:'clerk-booking-management', component:BookingManagementDashboardComponent, canActivate: [AuthGuardService],
+    data: {
+      role: 'clerk'
+    }
+  },
+  {path:'clerk-rate-comparison', component:RateComparisonsComponent, canActivate: [AuthGuardService],
+    data: {
+      role: 'clerk'
+    }
+  }
 ];
 
 @NgModule({
