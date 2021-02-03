@@ -23,8 +23,8 @@ const Op = db.Sequelize.Op;
 
 /**
  *@description {creates and save the submitted booking}
- * @param {request consists of the submitted booking details} req 
- * @param {response of the booking} res 
+ * @param {request consists of the submitted booking details} req
+ * @param {response of the booking} res
  */
  exports.create =  async ( req, res) => {
   // Validate request
@@ -44,14 +44,15 @@ const Op = db.Sequelize.Op;
     returnDate: req.body._returnDate,
     totalPrice: req.body._totalPrice,
     vehicleId: req.body._vehicleID,
+    licenseNumber: req.body._licenseNumber
   };
 
 	try{
 		const result =  await db.sequelize.transaction(async (t) => {
-			
+
 			//Save the booking
 			let book= await booking.create(bookingVehicle, {transaction: t});
-			
+
 			//save the additional equipments and booking
 			if (req.body._additionalEquipment) {
 				await book.addAdditionalEquipments(req.body._additionalEquipment, {transaction: t});
@@ -70,8 +71,8 @@ const Op = db.Sequelize.Op;
 /**
  * Clerk View
  *@description {Retrieve all Bookings}
- * @param {requesting for all booking} req 
- * @param {response consisting of bookings} res 
+ * @param {requesting for all booking} req
+ * @param {response consisting of bookings} res
  */
 exports.findAll = (req, res) => {
   booking.findAll({include: [additionalEquipment, vehicle, hirer]}).then((bookings) => res.json(bookings));
@@ -79,8 +80,8 @@ exports.findAll = (req, res) => {
 
 /**
  *@description {Find a single Booking with an id and return all details}
- * @param {requesting for the booking provided the id} req 
- * @param {response consisting of bookings} res 
+ * @param {requesting for the booking provided the id} req
+ * @param {response consisting of bookings} res
  */
 exports.findOne = (req, res) => {
   const id = req.params.id;
@@ -191,7 +192,7 @@ exports.extendReturnDate = async (req, res) => {
 
   try{
 		const result =  await db.sequelize.transaction(async (t) => {
-			
+
 			//Save the booking
 			await booking.update({ returnDate: req.body.returnDate },
         {
@@ -257,7 +258,7 @@ exports.findAllForStatus = (req, res) => {
 exports.findAllBookingsOfUser = (req, res) => {
   booking
     .findAll({
-      where: { hirerId: req.params.id },
+      where: { hirerId: req.params.email },
       include: [additionalEquipment, vehicle],
     })
     .then((data) => {
@@ -273,10 +274,10 @@ exports.findAllBookingsOfUser = (req, res) => {
 exports.completeBooking = async(req, res) => {
 	try{
 		const result =  await db.sequelize.transaction(async (t) => {
-			
+
 			//mark booking completed
 			await booking.update({ bookingStatus: req.body.bookingStatus },{ where: {id: req.params.id}, transaction:t});
-	
+
 		});
 		res.send(result);
 
@@ -285,7 +286,7 @@ exports.completeBooking = async(req, res) => {
 			message:
 			error.message && "Some error occurred while Completing the Booking.",
 		});
-	}	
+	}
 };
 
 calculatePrice =(bookedDate, returnDate, vehicleCost)=>{
@@ -315,7 +316,9 @@ exports.getAvailableVehicles= (req, res)=>{
     let vehicles=vehiclesList;
      booking.findAll({
       where: {
-        bookingStatus: "Booked"  
+        bookingStatus: {
+          [Op.or]: ["Booked", "Pending", "Picked", "Extended"]
+        }
       }
       }).then(bookedVehicles=>{
           console.log(bookedVehicles);
@@ -332,11 +335,11 @@ exports.getAvailableVehicles= (req, res)=>{
             console.log(index);
             console.log(vehicles[index]);
             if(index!=-1){
-              vehicles[index].quantity-=1; 
-              console.log(vehicles[index]);       
-            } 
-            return isDateExist;  
-          };       
+              vehicles[index].quantity-=1;
+              console.log(vehicles[index]);
+            }
+            return isDateExist;
+          };
         })
         console.log("booking" + element.id);
     })
@@ -358,38 +361,40 @@ exports.getAvailableEquipments= (req, res)=>{
   additionalEquipment.findAll().then( list=>{
     let aeList=list;
      booking.findAll({
-      where: {
-          bookingStatus: "Booked"
-      },include:{
+       where: {
+         bookingStatus: {
+           [Op.or]: ["Booked", "Pending", "Picked", "Extended"]
+         }
+       },include:{
         model:additionalEquipment, through: {attributes: []}
       }
     }).then(bookings=>{
       console.log(bookings)
       bookings.forEach(element => {
-       
+
         if(Array.isArray(element.additionalEquipments) && element.additionalEquipments.length>0){
-         
+
           requested.some(function (el){
-        
+
             let isDateExist=isWithinInterval(el, {
                   start: (element.bookingDate),
                   end: (element.returnDate)
                 })
-     
+
             if(isDateExist===true){
               element.additionalEquipments.forEach(ae=>{
                 let index=aeList.findIndex(item => item.id === ae.id);
                 if(index!=-1){
-                  aeList[index].quantity-=1; 
+                  aeList[index].quantity-=1;
                   console.log(aeList[index]);
-                }  
+                }
               });
-              return isDateExist;  
+              return isDateExist;
             }
-          }) 
+          })
           }
         }
-        
+
     )
     res.send(aeList);
     }).catch((err) => {
@@ -412,7 +417,9 @@ exports.getAvailabilityOfVehicle= (req, res)=>{
      booking.findAll({
       where: {
         [Op.and]:[
-         { bookingStatus: "Booked"},
+         { bookingStatus: {
+             [Op.or]: ["Booked", "Pending", "Picked", "Extended"]
+           }},
           {vehicleId: id}
         ],
       },attributes: ['id','bookingDate', 'returnDate']
@@ -430,17 +437,17 @@ exports.getAvailabilityOfVehicle= (req, res)=>{
             }else{
               let count={booking:element.id, count:1}
               bookingCount.push(count);
-            }        
+            }
           }
         })
-  
+
     })
       bookingCount.forEach(element=>{
         if(element.count>0){
-          vehicleBooking.quantity-=1; 
+          vehicleBooking.quantity-=1;
         }
       })
-    
+
     res.send(vehicleBooking);
     }).catch((err) => {
       res.status(500).send({
@@ -456,13 +463,17 @@ exports.checkForBookingAvailability= (req, res)=>{
 
   let start=startOfDay(parseISO(req.query.date));
   let end=endOfDay(parseISO(req.query.date));
-    
+
      booking.findAll({
       where: {
         [Op.and]:[
-         { bookingStatus: "Booked"},
+          {
+            bookingStatus: {
+              [Op.or]: ["Booked", "Pending", "Picked", "Extended"]
+            }
+          },
          {
-           bookingDate: { 
+           bookingDate: {
           [Op.gt]: start,
           [Op.lt]: end
           }

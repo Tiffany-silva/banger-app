@@ -3,7 +3,9 @@ module.exports = (sequelize, Sequelize) => {
         bookingStatus:Sequelize.STRING,
         bookingDate: Sequelize.DATE,
         returnDate: Sequelize.DATE,
-        totalPrice: Sequelize.DOUBLE
+        totalPrice: Sequelize.DOUBLE,
+        licenseNumber: Sequelize.STRING,
+        description: Sequelize.STRING
     });
     return Booking;
 }
