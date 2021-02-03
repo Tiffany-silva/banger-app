@@ -1,43 +1,50 @@
 <app-nav-clerk-menu></app-nav-clerk-menu>
-<h1>USER MANAGEMENT</h1>
+<h1 align="center" >User Management</h1>
+<mat-divider></mat-divider>
 
-<h3>HIRER MANAGEMENT</h3>
+<h3>Registered Hirers</h3>
   <div class="container mat-elevation-z8">
-  
+
     <div class="form">
         <mat-form-field color="accent">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Filter Users" #input>
         </mat-form-field>
     </div>
-  
+
     <mat-table #table [dataSource]="dataSource" matSort #sort="matSort" class="mat-cell">
-        
+
       <ng-container matColumnDef="firstName">
         <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
         <mat-cell *matCellDef="let row" >{{row.firstName}}</mat-cell>
       </ng-container>
-  
+
       <ng-container matColumnDef="lastName">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.lastName}}</mat-cell>
       </ng-container>
-  
+
       <ng-container matColumnDef="dob">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Date of Birth</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.dob}}</mat-cell>
       </ng-container>
-  
+
+      <ng-container matColumnDef="photoURL">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Photo URL</mat-header-cell>
+        <mat-cell *matCellDef="let row"><a href={{row.photoURL}}>{{row.photoURL}}</a> </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="proofURL">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Proof URL</mat-header-cell>
+        <mat-cell *matCellDef="let row"><a href={{row.proofURL}}>{{row.proofURL}}</a> </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="drivingLicenseUrl">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Driving License URL</mat-header-cell>
+        <mat-cell *matCellDef="let row"><a href={{row.drivingLicenseUrl}}>{{row.drivingLicenseUrl}}</a> </mat-cell>
+      </ng-container>
       <ng-container matColumnDef="confirmIdentity">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Confirmed Identity</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.confirmIdentity}}</mat-cell>
       </ng-container>
-  
-      <ng-container matColumnDef="drivingLicense">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Driving License</mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{row.drivingLicense}}</mat-cell>
-      </ng-container>
-  
       <ng-container matColumnDef="address">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.address}}</mat-cell>
@@ -54,61 +61,62 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Created At</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.createdAt}}</mat-cell>
       </ng-container>
-  
+
       <!-- actions -->
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
          <mat-cell *matCellDef="let row; let i=index;">
-          <button mat-icon-button color="accent" (click)="startEdit( row.id, row.blackListed)">
+          <button mat-icon-button color="accent" (click)="startEdit( row.id, row.blackListed, row.confirmIdentity)">
             <mat-icon aria-label="Edit">edit</mat-icon>
           </button>
-     
+
           <button mat-icon-button color="accent" (click)="deleteItem(row.id, row.firstName, row.lastName, row.email)">
             <mat-icon aria-label="Delete">delete</mat-icon>
           </button>
-        </mat-cell> 
+        </mat-cell>
     </ng-container>
 
-  
+
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
-  
+
     <mat-paginator #paginator
                    [pageIndex]="0"
                    [pageSize]="10"
-                   [pageSizeOptions]="[1, 10, 25, 100]">
+                   [pageSizeOptions]="[5, 10]">
     </mat-paginator>
   </div>
+<mat-divider></mat-divider>
 
-  <h3>CLERK MANAGEMENT</h3>
+  <h3>Registered Clerks</h3>
 
   <div class="container mat-elevation-z8">
-  
+
     <div class="form">
         <mat-form-field color="accent">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilterClerk($event)" placeholder="Filter Clerk Users" #input>
         </mat-form-field>
     </div>
-  
+
     <mat-table #table [dataSource]="dataSourceClerk" matSort #sortClerk="matSort" class="mat-cell">
-        
+
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
         <mat-cell *matCellDef="let row" >{{row.name}}</mat-cell>
       </ng-container>
-  
+
       <ng-container matColumnDef="email">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.email}}</mat-cell>
       </ng-container>
-  
+
       <ng-container matColumnDef="createdAt">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Created At</mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.createdAt}}</mat-cell>
       </ng-container>
-  
+
       <!-- actions -->
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef>
@@ -117,21 +125,21 @@
             </button>
           </mat-header-cell>
         <mat-cell *matCellDef="let row; let i=index;">
-          
+
           <button mat-icon-button color="accent" (click)="deleteClerk(row.id, row.name, row.email)">
             <mat-icon aria-label="Delete">delete</mat-icon>
           </button>
-        </mat-cell> 
+        </mat-cell>
     </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumnsClerk"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumnsClerk;"></mat-row>
     </mat-table>
-  
+
     <mat-paginator #paginatorClerk
                    [pageIndex]="0"
                    [pageSize]="10"
-                   [pageSizeOptions]="[1, 10, 25, 100]">
+                   [pageSizeOptions]="[5, 10]">
     </mat-paginator>
   </div>
-  
+<app-about-us-footer></app-about-us-footer>

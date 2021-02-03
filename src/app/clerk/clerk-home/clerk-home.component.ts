@@ -22,8 +22,8 @@ import { HirerService } from 'src/app/services/user/hirer.service';
 })
 export class ClerkHomeComponent implements OnInit {
 
-  displayedColumns = [ 'firstName', 'lastName', 'dob', 'confirmIdentity', 
-  'drivingLicense', 'address', 'email', 'blackListed', 'createdAt', 'actions'];
+  displayedColumns = [ 'firstName', 'lastName', 'dob', 'photoURL','proofURL',
+  'drivingLicenseUrl', 'confirmIdentity','address', 'email', 'blackListed', 'createdAt', 'actions'];
 
   displayedColumnsClerk = [ 'name', 'email','createdAt', 'actions'];
 
@@ -59,7 +59,7 @@ export class ClerkHomeComponent implements OnInit {
   }
 
   ngAfterViewInit():void{
-    
+
   }
   getUsers(){
     this.dataService.getAllHirers().subscribe(data=>{
@@ -125,24 +125,24 @@ export class ClerkHomeComponent implements OnInit {
           this.router.navigate(['/clerk-home']).then(() => {
             window.location.reload();
           });
-        })   
+        })
       }
     });
   }
 
-  startEdit( id: number, blackListed: boolean) {
+  startEdit( id: number, blackListed: boolean, confirmIdentity:boolean) {
 
     console.log(this.index);
     const dialogRef = this.dialogService.open(EditDialogComponent, {
-      data: {id: id, blackListed: blackListed, entity: "hirer"}
+      data: {id: id, blackListed: blackListed, confirmIdentity: confirmIdentity, entity: "hirer"}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-  
+
       console.log('The dialog was closed');
           console.log(result);
-            let status={blackListed: result}
-              this.dataService.blackListUser(id, status).subscribe(data=>{
+            let status={blackListed: result.blackListed, confirmIdentity:result.confirmIdentity}
+              this.dataService.updateHirer(id, status).subscribe(data=>{
               console.log(data);
               this.router.navigate(['/clerk-home']).then(() => {
                 window.location.reload();
@@ -152,7 +152,7 @@ export class ClerkHomeComponent implements OnInit {
   }
 
   deleteItem( id: number, firstName: string, lastName: string, email: string) {
-  
+
     const dialogRef = this.dialogService.open(DeleteDialogComponent, {
       width: '400px',
       data: {id:id,firstName: firstName, email: email, lastName: lastName, user:"hirer"}
@@ -166,12 +166,12 @@ export class ClerkHomeComponent implements OnInit {
             window.location.reload();
           });
         });
-        
+
       }
     });
   }
   deleteClerk( id: number, name: string, email: string) {
-  
+
     const dialogRef = this.dialogService.open(DeleteDialogComponent, {
       width: '400px',
       data: {id:id,name: name, email: email, user: "clerk"}
@@ -185,7 +185,7 @@ export class ClerkHomeComponent implements OnInit {
             window.location.reload();
           });
         });
-        
+
       }
     });
   }
