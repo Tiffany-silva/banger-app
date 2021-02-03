@@ -10,15 +10,15 @@
         );
         next();
       });
-    
+
     // Create a new additionalEquipment
     aEquipmentRouter.post("/",[auth.authJwt.verifyToken, auth.authJwt.isClerk], additionalEquipment.create);
 
-    aEquipmentRouter.get("/findAllAvailable",[auth.authJwt.verifyToken], additionalEquipment.findAllAvailable);
-  
+    aEquipmentRouter.get("/findAllAvailable", additionalEquipment.findAllAvailable);
+
     // Retrieve all additionalEquipment
-    aEquipmentRouter.get("/", [auth.authJwt.verifyToken],additionalEquipment.findAll);
-    
+    aEquipmentRouter.get("/",additionalEquipment.findAll);
+
     // Retrieve a single additional Equipment with id
     aEquipmentRouter.get("/:id", [auth.authJwt.verifyToken],additionalEquipment.findOne);
 
@@ -26,8 +26,8 @@
 
     // Delete a hirer with id
     aEquipmentRouter.delete("/:id", [auth.authJwt.verifyToken, auth.authJwt.isClerk],additionalEquipment.delete);
-  
+
     // Delete all hirer
     aEquipmentRouter.delete("/", [auth.authJwt.verifyToken, auth.authJwt.isClerk],additionalEquipment.deleteAll);
-  
+
 module.exports=aEquipmentRouter;
