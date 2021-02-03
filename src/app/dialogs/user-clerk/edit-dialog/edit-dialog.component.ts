@@ -12,9 +12,9 @@ export class EditDialogComponent implements OnInit {
   bookingStatus:Status[]=[Status.BOOKED, Status.CANCELLED, Status.COMPLETED, Status.EXTENDED, Status.PICKED];
   myForm:any;
   constructor(public dialogRef: MatDialogRef<EditDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { 
+    @Inject(MAT_DIALOG_DATA) public data: any) {
       console.log(data)
-      
+
     }
 
     getStatus(){
@@ -24,6 +24,14 @@ export class EditDialogComponent implements OnInit {
         return "Not Blacklisted";
       }
     }
+
+  getStatusIdentity(){
+    if(this.data.confirmIdentity==true){
+      return "Confirmed";
+    }else{
+      return "Not Confirmed";
+    }
+  }
 
 onNoClick(): void {
 this.dialogRef.close();

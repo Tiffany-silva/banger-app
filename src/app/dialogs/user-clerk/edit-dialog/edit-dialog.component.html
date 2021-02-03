@@ -1,20 +1,27 @@
 <div class="container" *ngIf="data.entity==='hirer'">
-    <h3 mat-dialog-title>Blacklist Status</h3>
-  
+    <h3 mat-dialog-title>Update Hirer</h3>
+
     <div>
-  
-      <mat-slide-toggle [(ngModel)]="data.blackListed"> {{getStatus()}}</mat-slide-toggle>
+      <div>
+        <mat-slide-toggle [(ngModel)]="data.blackListed"> {{getStatus()}}</mat-slide-toggle>
+
+      </div>
+      <div>
+        <mat-slide-toggle [(ngModel)]="data.confirmIdentity"> {{getStatusIdentity()}}</mat-slide-toggle>
+
+      </div>
+
 
       <div mat-dialog-actions>
-        <button mat-button [mat-dialog-close]="data.blackListed" cdkFocusInitial>Update Status</button>
+        <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Update Status</button>
         <button mat-button (click)="onNoClick()">Cancel</button>
-       
+
       </div>
   </div>
   </div>
 
   <div class="container" *ngIf="data.entity==='booking'">
-    <h3 mat-dialog-title>Blacklist Status</h3>
+    <h3 mat-dialog-title>Status</h3>
     <div>
       <mat-slide-toggle [(ngModel)]="data.blackListed"> {{getStatus()}}</mat-slide-toggle>
       <div class="form">
@@ -31,8 +38,7 @@
       <div mat-dialog-actions>
         <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Update Status</button>
         <button mat-button (click)="onNoClick()">Cancel</button>
-       
+
       </div>
   </div>
   </div>
-  
