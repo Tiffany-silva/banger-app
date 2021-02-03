@@ -1,10 +1,11 @@
 import { Role } from './clerk';
 
 export class Hirer {
-    
+
     private _id!: string;
     private _firstName:string='';
     private _lastName:string='';
+    private _nic:string='';
     private _email:string='';
     private _photoURL:string='';
     private _confirmIdentity:boolean= false;
@@ -20,8 +21,16 @@ export class Hirer {
    public get role(){
        return this._role;
    }
-   
-    public get firstName(){
+
+  get nic(): string {
+    return this._nic;
+  }
+
+  set nic(value: string) {
+    this._nic = value;
+  }
+
+  public get firstName(){
         return this._firstName;
     }
     public set firstName(firstname:string){

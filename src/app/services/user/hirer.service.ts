@@ -18,24 +18,25 @@ export class HirerService {
     return this.http.put(`${baseUrl}/updatePassword/${id}`, data);
   }
 
-  updateConfirmIdentity(id:any, data:any): Observable<any> {
-    return this.http.put(`${baseUrl}/confirmIdentity/${id}`, data);
+  updateConfirmIdentity(email:any, data:any): Observable<any> {
+    console.log(data);
+    return this.http.put(`${baseUrl}/confirmIdentity/${email}`, data);
   }
 
   updateFirstName(id:any, data:any): Observable<any> {
     return this.http.put(`${baseUrl}/updateFirstName/${id}`, data);
   }
-  
+
   updatePhotoURL(id:any, data:any): Observable<any> {
     return this.http.put(`${baseUrl}/updatePhotoURL/${id}`, data);
   }
-  
+
   updateAddress(id:any, data:any): Observable<any> {
     return this.http.put(`${baseUrl}/updateAddress/${id}`, data);
   }
-  
-  checkIfBlacklisted(id:any): Observable<any> {
-    return this.http.get(`${baseUrl}/isBlacklisted/${id}`);
+
+  checkIfBlacklisted(email:any): Observable<any> {
+    return this.http.get(`${baseUrl}/isBlacklisted/${email}`);
   }
 
   getAllBlacklisted(): Observable<any> {
@@ -49,12 +50,20 @@ export class HirerService {
   getHirer(id:any): Observable<any> {
     return this.http.get(`${baseUrl}/${id}`);
   }
+
+  getHirerByEmail(email:any): Observable<any> {
+    return this.http.get(`${baseUrl}/getByEmail/${email}`);
+  }
+
   getAllHirers(): Observable<any> {
     return this.http.get(baseUrl);
   }
 
   blackListUser(id:any, data:any): Observable<any> {
     return this.http.put(`${baseUrl}/blackList/${id}`, data);
+  }
+  updateHirer(id:any, data:any): Observable<any> {
+    return this.http.put(`${baseUrl}/update/${id}`, data);
   }
   create(data:any): Observable<any> {
     return this.http.post(baseUrl,data);

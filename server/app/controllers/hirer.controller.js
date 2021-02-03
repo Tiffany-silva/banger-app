@@ -13,20 +13,21 @@ exports.create =(req, res) => {
 		});
 		return;
 	}
+	console.log(req.body);
 	// Create a Hirer
     let hirerUser = {
       firstName:req.body.firstName,
       lastName:req.body.lastName,
-      photoURL:req.body.photoURL, 
+      photoURL:req.body.photoURL,
       confirmIdentity:req.body.confirmIdentity ? req.body.confirmIdentity : false ,
       drivingLicenseUrl:req.body.drivingLicenseUrl ? req.body.drivingLicenseUrl : null,
       address:req.body.address,
       dob:req.body.dob,
-      blackListed: false, 
+      blackListed: false,
       email:req.body.email,
       password:req.body.password
     }
-    
+
 	// Save Hirer in the database
 	hirer.create(hirerUser)
 		.then(data => {
@@ -48,7 +49,7 @@ exports.findAll=(req, res) => {
  }
 
 // Find a single Hirer with an id
-exports.findOne= (req, res)=> { 
+exports.findOne= (req, res)=> {
 	const id = req.params.id;
 
   hirer.findOne({ where: { id: id }}).then(data => {
@@ -57,6 +58,19 @@ exports.findOne= (req, res)=> {
     .catch(err => {
       res.status(500).send({
         message: "Error retrieving hirer with id=" + id
+      });
+    });
+}
+
+exports.findByEmail= (req, res)=> {
+  const email = req.params.email;
+
+  hirer.findOne({ where: { email: email }}).then(data => {
+    res.send(data);
+  })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error retrieving hirer with email=" + id
       });
     });
 }
@@ -109,7 +123,7 @@ exports.delete = (req, res) => {
 };
 
 // Delete all Hirer from the database.
-exports.deleteAll =(req, res)=>{ 
+exports.deleteAll =(req, res)=>{
 	hirer.destroy({
 		where: {},
 		truncate: false
@@ -127,9 +141,9 @@ exports.deleteAll =(req, res)=>{
 
 
 exports.confirmIdentity =(req, res)=>{
-    hirer.update({ drivingLicenseUrl: req.body.drivingLicenseUrl, confirmIdentity: req.body.confirmId }, {
+    hirer.update({ drivingLicenseUrl: req.body.drivingLicenseUrl, proofURL: req.body.proofURL }, {
         where: {
-          id: req.params.id
+          email: req.params.email
         }
       }).then(data => {
         res.send(data);
@@ -139,7 +153,7 @@ exports.confirmIdentity =(req, res)=>{
           message:
             err.message || "Some error occurred while confirming identity."
         });
-      });;
+      });
 }
 
 exports.updatePhotoURL=(req, res)=> {
@@ -207,7 +221,7 @@ exports.updateAddress=(req, res)=>{
 }
 
 // Find all available blacklisted
-exports.findAllBlacklisted=(req, res)=> { 
+exports.findAllBlacklisted=(req, res)=> {
 	hirer.findAll({ where: { blacklisted: true }})
     .then(data => {
       res.send(data);
@@ -238,13 +252,13 @@ exports.blackList=(req, res)=>{
 }
 
 // Find all available bookings of hirer
-exports.findAllBookingsOfHirer=(req, res)=>{ 
+exports.findAllBookingsOfHirer=(req, res)=>{
 	booking.findAll({ where: { hirerId: res.body.id }, include: [
     {
-      model: booking, 
+      model: booking,
       include: [
         vehicle, additionalEquipment
-      ]  
+      ]
     }
   ]})
     .then(data => {
@@ -259,13 +273,13 @@ exports.findAllBookingsOfHirer=(req, res)=>{
 }
 
 exports.isBlacklisted = (req, res) => {
-  const id = req.params.id;
+  const email = req.params.email;
 
   hirer
     .findOne({
-      where: { id: id },
+      where: { email: email },
       attributes: ['blackListed']
-      
+
     } )
     .then((data) => {
       console.log(data)
@@ -273,7 +287,7 @@ exports.isBlacklisted = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Booking with id=" + id,
+        message: "Error retrieving Booking with email=" + email,
       });
     });
 };
