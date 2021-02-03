@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { EditDialogComponent } from 'src/app/dialogs/user-clerk/edit-dialog/edit-dialog.component';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { HirerService } from 'src/app/services/user/hirer.service';
+import {DialogBoxComponent} from '../../dialogs/dialog-box/dialog-box.component';
 
 @Component({
   selector: 'app-booking-management-dashboard',
@@ -25,8 +26,7 @@ import { HirerService } from 'src/app/services/user/hirer.service';
 })
 export class BookingManagementDashboardComponent implements OnInit {
 
-  displayedColumns = [ 'bookingStatus', 'bookingDate', 'returnDate', 'totalPrice', 
-  'hirer', 'vehicle', 'equipments', 'createdAt','actions'];
+  displayedColumns = [ 'id','bookingStatus', 'bookingDate', 'returnDate', 'totalPrice', 'licenseNumber', 'description','createdAt','actions'];
   expandedElement: any | null;
 
   index: number;
@@ -48,15 +48,12 @@ export class BookingManagementDashboardComponent implements OnInit {
     this.getUsers();
   }
 
-  ngAfterViewInit():void{
-    
-  }
   getUsers(){
     this.dataService.getAllBookings().subscribe(data=>{
       console.log(data);
       data.forEach((element:any) => {
-        element.bookingDate= formatISO(parseISO(element.createdAt), { representation: 'date' });
-        element.returnDate= formatISO(parseISO(element.createdAt), { representation: 'date' });
+        element.bookingDate= formatISO(parseISO(element.bookingDate), { representation: 'date' });
+        element.returnDate= formatISO(parseISO(element.returnDate), { representation: 'date' });
         element.createdAt= formatISO(parseISO(element.createdAt), { representation: 'date' });
       });
       this.bookings=data;
@@ -81,24 +78,6 @@ export class BookingManagementDashboardComponent implements OnInit {
     }
   }
 
-  // openAddDialog() {
-  //   let clerk=new Clerk();
-  //   console.log(clerk)
-  //   const dialogRef = this.dialogService.open(AddDialogComponent, {
-  //     data: {clerk: clerk }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log(result)
-  //     if (result.clerk) {
-  //       this.authService.registerClerk(result.clerk).subscribe(data=>{
-  //         this.router.navigate(['/clerk-home']).then(() => {
-  //           window.location.reload();
-  //         });
-  //       })   
-  //     }
-  //   });
-  // }
 
   startEdit( id: number,hirerId:number, blackListed: boolean, bookingStatus:any) {
 
@@ -108,7 +87,7 @@ export class BookingManagementDashboardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-       
+
       if(result && result.blackListed!=blackListed && result.bookingStatus==bookingStatus){
         let status={blackListed: result.blackListed}
         this.hirerService.blackListUser(hirerId, status).subscribe(data=>{
@@ -140,8 +119,59 @@ export class BookingManagementDashboardComponent implements OnInit {
         });
       });
       }
-     
+
       });
     }
 
+  checkWithDMV(id:any, licenseNumber: string,photoURL:string, createdAt:any){
+    const dialogRef = this.dialogService.open(DialogBoxComponent, {
+      data: {type: "confirm", title: 'Check with DMV'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result===1){
+        this.dataService.isUserInDMVList(id, createdAt, photoURL, licenseNumber).subscribe(status => {
+          if (status) {
+            console.log(status)
+            const dialogRef = this.dialogService.open(DialogBoxComponent, {
+              data: {type: "Message", message: status.message, title: 'Check with DMV'}
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+              this.router.navigate(['/clerk-booking-management']).then(() => {
+                window.location.reload();
+              });
+            });
+          }
+        })
+      }
+      console.log('The dialog was closed');
+
+    })
+  }
+  checkForFraudClaims(bookingId:any,identityNumber:any) {
+    const dialogRef = this.dialogService.open(DialogBoxComponent, {
+      data: {type: "confirm", title: 'Check with Insurance Records for Fraud'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 1) {
+        this.dataService.checkForFraudClaims(identityNumber, bookingId).subscribe(status => {
+          if (status) {
+            const dialogRef = this.dialogService.open(DialogBoxComponent, {
+              data: {type: "Message", message: status.message, title: 'Check with Insurance Records for Fraud'}
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+              this.router.navigate(['/clerk-booking-management']).then(() => {
+                window.location.reload();
+              });
+            });
+          }
+        })
+      }
+      console.log('The dialog was closed');
+
+    })
+  }
 }

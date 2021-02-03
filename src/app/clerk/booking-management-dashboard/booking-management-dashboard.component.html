@@ -1,54 +1,69 @@
 <app-nav-clerk-menu></app-nav-clerk-menu>
-<h1>BOOKING MANAGEMENT</h1>
-
+<h1 align="center">Booking Management</h1>
+<mat-divider style="padding-bottom:20px "></mat-divider>
   <div class="container mat-elevation-z8">
-  
+
     <div class="form">
         <mat-form-field color="accent">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="Filter Bookings" #input>
         </mat-form-field>
     </div>
-  
+
     <table mat-table #table [dataSource]="dataSource" multiTemplateDataRows matSort #sort="matSort" class="mat-cell">
-        
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let row" >{{row.id}}</td>
+      </ng-container>
+
       <ng-container matColumnDef="bookingStatus">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Booking Status</th>
         <td mat-cell *matCellDef="let row" >{{row.bookingStatus}}</td>
       </ng-container>
-  
+
       <ng-container matColumnDef="bookingDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Booking Date</th>
         <td mat-cell *matCellDef="let row"> {{row.bookingDate}}</td>
       </ng-container>
-  
+
       <ng-container matColumnDef="returnDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Return Date</th>
         <td mat-cell *matCellDef="let row"> {{row.returnDate}}</td>
       </ng-container>
-  
+
       <ng-container matColumnDef="totalPrice">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Price</th>>
         <td mat-cell *matCellDef="let row"> ${{row.totalPrice}}</td>>
       </ng-container>
-      <ng-container matColumnDef="hirer">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hirer</th>>
-        <td mat-cell *matCellDef="let row"> {{row.hirer.firstName}} {{row.hirer.lastName}}</td>>
+<!--      <ng-container matColumnDef="hirer">-->
+<!--        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hirer</th>>-->
+<!--        <td mat-cell *matCellDef="let row"> {{row.hirer.firstName}} {{row.hirer.lastName}}</td>>-->
+<!--      </ng-container>-->
+<!--      <ng-container matColumnDef="vehicle">-->
+<!--        <th mat-header-cell *matHeaderCellDef mat-sort-header>Vehicle</th>>-->
+<!--        <td mat-cell *matCellDef="let row"> {{row.vehicle.vehicleName}}</td>>-->
+<!--      </ng-container>-->
+<!--      <ng-container matColumnDef="equipments">-->
+<!--        <th mat-header-cell *matHeaderCellDef mat-sort-header>Equipments</th>>-->
+<!--        <td mat-cell *matCellDef="let row">-->
+<!--            <span *ngIf="row.additionalEquipments.length===0">-->
+<!--                &#45;&#45;-->
+<!--            </span>-->
+<!--            <span *ngFor="let equipment of row.additionalEquipments">-->
+<!--                {{equipment.equipmentType}}-->
+<!--            </span>-->
+<!--        </td>-->
+<!--      </ng-container>-->
+      <ng-container matColumnDef="licenseNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>License Number</th>
+        <td mat-cell *matCellDef="let row"> {{row.licenseNumber}}</td>
       </ng-container>
-      <ng-container matColumnDef="vehicle">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Vehicle</th>>
-        <td mat-cell *matCellDef="let row"> {{row.vehicle.vehicleName}}</td>>
-      </ng-container>
-      <ng-container matColumnDef="equipments">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Equipments</th>>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
         <td mat-cell *matCellDef="let row">
-            <span *ngIf="row.additionalEquipments.length===0">
-                --
-            </span>
-            <span *ngFor="let equipment of row.additionalEquipments">
-                {{equipment.equipmentType}}
-            </span>
-        </td>
+          <div *ngIf="row.description">{{row.description}}</div>
+        <div *ngIf="!row.description">-</div> </td>
       </ng-container>
       <ng-container matColumnDef="createdAt">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
@@ -60,53 +75,78 @@
           <div class="example-element-detail"
                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
             <div class="example-element-description">
-              <div > Booking Date: {{element.bookingDate}} </div>
-              <div > Return Date: {{element.returnDate}} </div>
-              <div >Total Price: ${{element.totalPrice}} </div>
-              
+              <span class="value"> Booking Date  </span>{{element.bookingDate}}
+              <div>
+                <span class="value"> Return Date  </span>{{element.returnDate}}
+              </div>
+              <div>
+                <span class="value">Total Price </span>${{element.totalPrice}}
+              </div>
+
             </div>
             <div class="example-element-description">
-                <div>Vehicle Information</div>
-                <div > Vehicle Name: {{element.vehicle.vehicleName}} </div>
-                <div > Vehicle Type: {{element.vehicle.vehicleType}} </div>                
+                <span class="value"> Vehicle Name  </span> {{element.vehicle.vehicleName}}
+              <div>
+                <span class="value"> Vehicle Type  </span>{{element.vehicle.vehicleType}}
+              </div>
             </div>
               <div class="example-element-description">
                 <div *ngIf="element.additionalEquipments.length!=0">
-                    <div>Equipment Information</div> 
                     <div *ngFor="let equipment of element.additionalEquipments">
-                    <div>Equipment Type: {{equipment.equipmentType}}</div>
-                    <div>Quantity: {{equipment.quantity}}</div>
+                    <span class="value">Equipment Type </span>{{equipment.equipmentType}}
                     </div>
-                </div>      
+                </div>
               </div>
               <div class="example-element-description">
-                <div>Hirer Information</div>
-                <div > Name: {{element.hirer.firstName}} {{element.hirer.lastName}}</div>
-                <div > Email: {{element.hirer.email}} </div>    
-                <div *ngIf="element.hirer.blackListed===true"> Blacklisted: Yes </div>  
-                <div *ngIf="element.hirer.blackListed===false"> Blacklisted: No </div>                          
+                <div ><span class="value">Name</span>  {{element.hirer.firstName}} {{element.hirer.lastName}}</div>
+                <div> <span class="value">Photo</span> <a href={{element.hirer.photoURL}} target="_blank">{{element.hirer.photoURL}}</a></div>
+                <div > <span class="value">Email</span> {{element.hirer.email}} </div>
+                <div> <span class="value">Proof</span>
+                  <div *ngIf="element.hirer.proofURL">
+                    <a href={{element.hirer.proofURL}} target="_blank">{{element.hirer.proofURL}}</a>
+                  </div>
+                  <span style="color: red" *ngIf="!element.hirer.proofURL">
+                   Not provided
+                  </span>
+                </div>
+                <div> <span class="value">Driving License</span>
+                  <div *ngIf="element.hirer.drivingLicenseUrl">
+                  <a href={{element.hirer.drivingLicenseUrl}} target="_blank">{{element.hirer.drivingLicenseUrl}}</a>
+                </div>
+                  <span style="color:red;" *ngIf="!element.hirer.drivingLicenseUrl">
+                    Not provided
+                  </span>
+                </div>
+
+                <div class="value" *ngIf="element.hirer.blackListed===true"> Blacklisted<span style="color: red"></span> Yes </div>
+                <div class="value" *ngIf="element.hirer.blackListed===false"> Blacklisted <span style="color: green" >No</span>  </div>
             </div>
             <div class="example-element-description">
-              <span class="example-element-description-attribution"> Booking Status: {{element.bookingStatus}} </span>
+              <span class="example-element-description-attribution"> Booking Status -  {{element.bookingStatus}} </span>
             </div>
           </div>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+<!--        <mat-header-cell *matHeaderCellDef></mat-header-cell>-->
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
          <mat-cell *matCellDef="let row; let i=index;">
           <button mat-icon-button color="accent" (click)="startEdit( row.id,row.hirer.id, row.hirer.blackListed, row.bookingStatus)">
             <mat-icon aria-label="Edit">edit</mat-icon>
           </button>
-     
-          <!-- <button mat-icon-button color="accent" (click)="deleteItem(row.id, row.firstName, row.lastName, row.email)">
-            <mat-icon aria-label="Delete">delete</mat-icon>
-          </button> -->
-        </mat-cell> 
+
+           <button mat-icon-button color="accent" [disabled]="row.bookingStatus != 'Pending'" (click)="checkWithDMV(row.id,row.licenseNumber,row.hirer.photoURL, row.createdAt)">
+            <mat-icon aria-label="flaky">flaky</mat-icon>
+          </button>
+
+           <button mat-icon-button color="accent" [disabled]="row.bookingStatus != 'Pending'" (click)="checkForFraudClaims(row.id,row.hirer.nic)">
+             <mat-icon aria-label="perm_identity">perm_identity</mat-icon>
+           </button>
+        </mat-cell>
     </ng-container>
 
-  
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let element; columns: displayedColumns;"
           class="example-element-row"
@@ -115,10 +155,12 @@
       </tr>
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
     </table>
-  
+
     <mat-paginator #paginator
                    [pageIndex]="0"
                    [pageSize]="10"
                    [pageSizeOptions]="[5, 10, 25, 100]">
     </mat-paginator>
   </div>
+
+<app-about-us-footer></app-about-us-footer>
