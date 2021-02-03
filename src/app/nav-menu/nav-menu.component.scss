@@ -1,4 +1,4 @@
-body { 
+body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;
 }
@@ -24,7 +24,7 @@ mat-toolbar{
 }
 
 .logout{
-  padding-left: 28%;
+  padding-left: 110%;
   display: inline-block;
 }
 .material-icons{
@@ -33,12 +33,12 @@ mat-toolbar{
   padding-right: 20px;
 }
 .basic-container {
-  padding: 50px; 
+  padding: 50px;
 
   a {
     text-decoration: none;
     color: yellow;
-  } 
+  }
 }
 button.mat-menu-item {
   width: 100%;
@@ -78,5 +78,5 @@ mat-menu{
 .mat-list-item .mat-list-item-content {
   padding-left: 0px !important;
   padding-right: 0px !important;
- 
+
 }

@@ -8,14 +8,21 @@
       <button class="logo" mat-menu-item>B A N G E R Clerk</button>
     </mat-list-item>
     <mat-list-item>
-      <button  mat-menu-item routerLink="/clerk-home">USER MANAGEMENT</button>
+      <button mat-menu-item [matMenuTriggerFor]="menu1" >DASHBOARD</button>
     </mat-list-item>
-
+    <mat-menu #menu1="matMenu" >
+      <button mat-menu-item routerLink="/clerk-home">
+        <span>USER MANAGEMENT</span>
+      </button>
+      <button mat-menu-item routerLink="/clerk-item-management">
+        <span>ITEM MANAGEMENT</span>
+      </button>
+      <button mat-menu-item routerLink="/clerk-booking-management">
+        <span>BOOKING MANAGEMENT</span>
+      </button>
+    </mat-menu>
     <mat-list-item>
-      <button mat-menu-item routerLink="/clerk-item-management">ITEM MANAGEMENT</button>
-    </mat-list-item>
-    <mat-list-item>
-      <button mat-menu-item routerLink="/clerk-booking-management">BOOKING MANAGEMENT</button>
+      <button mat-menu-item routerLink="/clerk-rate-comparison">RATE COMPARISON</button>
     </mat-list-item>
 	  <mat-list-item>
       <button mat-menu-item [matMenuTriggerFor]="billsmenu" >ACCOUNT</button>
@@ -29,16 +36,18 @@
       </button>
     </mat-menu>
 
-  
+
     <div  class="logout">
       <mat-list-item>
-        <button mat-menu-item (click)="logout()">logout</button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon aria-label="exit_to_app">exit_to_app</mat-icon>
+        </button>
       </mat-list-item>
     </div>
-   
+
 
   </mat-nav-list>
-  
+
 </mat-toolbar>
 </div>
 

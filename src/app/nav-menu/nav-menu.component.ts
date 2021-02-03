@@ -21,11 +21,17 @@ export class NavMenuComponent {
     let role={role: user.role};
     console.log(role);
     console.log(user);
+    window.sessionStorage.clear();
     this.auth.logout(role, user.id).subscribe(data=>{
       console.log(data);
-      this.tokenstorage.signOut();
       this.router.navigate(['/login'])
     })
-  
+  }
+
+  isUserloggedIn():boolean{
+    if(this.tokenstorage.isAuthenticated()){
+      return true;
+    }
+    return false;
   }
 }
