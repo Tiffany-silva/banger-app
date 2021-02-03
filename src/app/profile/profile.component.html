@@ -1,53 +1,33 @@
 <app-nav-menu></app-nav-menu>
-<div class="section1">
-    <h1>MY PROFILE</h1>
-    <mat-card >
-        <img  mat-card-image src="../../assets/woman.jpg" alt="photo">
-        <mat-card-content>
-            <div *ngIf="myProfile">
-                <p>{{myProfile.firstName}} {{myProfile.lastName}}</p>
-                <p>{{myProfile.dob}}</p>
-                <p>{{myProfile.role}}</p>
-                <p>{{myProfile.address}}</p>
-                <p>{{myProfile.email}}</p>
-                <p *ngIf="myProfile.confirmIdentity==true">Identity Confirmed</p>
-                <p *ngIf="myProfile.confirmIdentity==false">Identity Cofirmation Pending</p>    
-            </div>
-            
-        </mat-card-content>
+    <h1 align="center" style="padding-top: 10px">My Profile</h1>
+<mat-divider style="padding-bottom: 20px"></mat-divider>
 
-    </mat-card>
-    </div>
-    <div class="section2">
-    <h1>MY BOOKINGS</h1>
-    <div class="container" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="10px">
-       
-        <mat-card fxFlex="0 1 calc(20% - 20px)" *ngFor="let booking of obs | async; let i = index" class="product">
-                      <mat-card-title>{{booking.vehicle.vehicleName}}</mat-card-title>
+<div class="container" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="5px">
 
-          <img class="image" mat-card-image src="../../assets/car.jpg" alt="photo">
-          <mat-card-content>
-            <p>
-              {{booking.bookingStatus}}
-            </p>
-            <p>
-                {{booking.bookingDate}}
-              </p>
-              <p>
-                {{booking.returnDate}}
-              </p>
-              <p>
-               $ {{booking.totalPrice}}
-              </p>
-              <div *ngFor="let additionalEquipment of booking.additionalEquipments; let i=index">
-                <p>{{additionalEquipment.equipmentType}}</p>
-              </div>
+  <mat-card fxFlex="0 1 calc(40% - 20px)" class="product" >
+    <div *ngIf="myProfile" align="center">
+    <img class="image" mat-card-image src={{myProfile.photoURL}} alt="photo">
+    </div>
+  </mat-card>
+  <mat-card fxFlex="0 1 calc(60% - 20px)" class="product">
+    <p style="font-size: 25px" align="center">{{myProfile.firstName}} {{myProfile.lastName}}</p>
+    <p> <span style="font-weight: lighter">Birth Date -  </span> {{myProfile.dob}}</p>
+    <p> <span style="font-weight: lighter">Address - </span> {{myProfile.address}}</p>
+    <p> <span style="font-weight: lighter">Email - </span>{{myProfile.email}}</p>
+    <p *ngIf="myProfile.confirmIdentity==true"><span style="color: green">Identity Confirmed</span></p>
+    <p *ngIf="myProfile.confirmIdentity==false" align="center"> <span style="font-weight: lighter; color: red">Identity Confirmation Pending </span></p>
+    <div *ngIf="myProfile.confirmIdentity==false">
+      <p style="font-size: 14px; font-weight: bold">**Submit your Driving License and a recent utility or tax bill within 3 months to confirm your identity</p>
+      <input type="file" (change)="selectDL($event)" />
+    <div style="padding-top: 10px">
+      <input type="file" (change)="selectProof($event)" />
+    </div>
+      <div align="end">
+        <button mat-raised-button color="primary" (click)="confirmIdentity()" class="button" [disabled]="!(drivingLicense && proof)">Confirm Identity</button>
+      </div>
+    </div>
+  </mat-card>
+</div>
 
-          </mat-card-content>
-          <mat-card-actions align="end">
-          </mat-card-actions>
-        </mat-card>
-        
-    </div>
-    <mat-paginator [pageSizeOptions]="[4, 8]"></mat-paginator>
-    </div>
+<app-about-us-footer></app-about-us-footer>
+
