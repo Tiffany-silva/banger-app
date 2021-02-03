@@ -46,16 +46,18 @@ registerHirer = (req, res) => {
     let hirerUser = {
         firstName:req.body.firstName,
         lastName:req.body.lastName,
-        photoURL:req.body.photoURL, 
+        nic: req.body.nic,
+        photoURL:req.body.photoURL,
         confirmIdentity:req.body.confirmIdentity ? req.body.confirmIdentity : false ,
         drivingLicenseUrl:req.body.drivingLicenseUrl ? req.body.drivingLicenseUrl : null,
+        proofURL: req.body.drivingLicenseUrl ? req.body.drivingLicenseUrl : null,
         address:req.body.address,
         dob:req.body.dob,
-        blackListed: false, 
+        blackListed: false,
         email:req.body.email,
         password:bcrypt.hashSync(req.body.password, 8)
       }
-      
+
     // Save User to Database
     hirerdb.create(hirerUser)
       .then(user => {
@@ -91,11 +93,11 @@ exports.signin = async (req, res) => {
                 res.status(200).send(response);
             }else{
                 return res.status(404).send({ message: "User Not found." });
-            }   
+            }
         }
     }catch(error){
         res.status(500).send({ message: error.message });
-    }   
+    }
 }
 
 validateSignIn=async (req, res, user)=>{
@@ -109,13 +111,13 @@ validateSignIn=async (req, res, user)=>{
           accessToken: null,
           message: "Invalid Password!"
         });
-    } 
+    }
     if(user.token){
       res.status(400).send({  error: true, message: "already logged in"});
     }else{
       let role=user.role.name;
       let token= await this.generateToken(user, role);
-     
+
       let response={
           id: user.id,
           email: user.email,
@@ -127,7 +129,7 @@ validateSignIn=async (req, res, user)=>{
     // let token = jwt.sign({ id: clerk.id }, config.secret, {
     //     expiresIn: 86400 // 24 hours
     // });
-    
+
     }
 
 
@@ -142,7 +144,7 @@ exports.generateToken=async (user,role)=>{
     if(done) return token;
     }
   }
-  
+
 
 exports.findByToken= async (token,role)=>{
   jwt.verify(token, config.secret, async (err, decoded) => {
