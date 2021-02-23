@@ -27,14 +27,12 @@
               <button mat-raised-button color="primary" type="submit" class="button" [disabled]="!formGroup.valid">Login</button>
               <div align="center" style="padding-top: 10px;"><a routerLink="/signup">Sign up instead?</a></div>
             </div>
-            <div *ngIf=errorMessage style="color: red; font-weight: lighter" align="center">{{errorMessage}}</div>
+            <div *ngIf=errorMessage style="color: #ff0000; font-weight: lighter" align="center">{{errorMessage}}</div>
           </form>
         </div>
       </div>
     </div>
     <div class="col">
-
     </div>
   </div>
-
 </div>

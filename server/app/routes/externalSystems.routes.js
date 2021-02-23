@@ -9,9 +9,8 @@ externalRouter.use(function(req, res, next) {
   next();
 });
 
-// Create a new booking
 externalRouter.post("/isUserInDMVList",[auth.authJwt.verifyToken], external.isUserInDMVList);
-externalRouter.post("/checkForFraudClaims",[auth.authJwt.verifyToken], external.checkForFraudClaims);
+externalRouter.post("/checkForFraudClaims",[auth.authJwt.verifyToken], external.checkForFraudClaimsFromInsuranceDB);
 externalRouter.get("/rateComparison",[auth.authJwt.verifyToken], external.checkForFraudClaims);
 
 module.exports = externalRouter;

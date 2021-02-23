@@ -13,6 +13,7 @@ const booking = require("../server/app/routes/booking.routes");
 const auth=require("../server/app/routes/auth.routes");
 const external=require("./app/routes/externalSystems.routes")
 const webScraping=require("./app/routes/webScraping.routes")
+
 const corsOptions = {
   origin: true
 };

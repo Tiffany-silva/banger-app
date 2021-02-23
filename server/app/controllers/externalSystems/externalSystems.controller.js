@@ -7,10 +7,13 @@
  */
 
 const transporter= require("../../configuration/smtp.config");
-const fs = require('fs').promises;
-const parse = require('csv-parse');
-const db = require("../../db.Models");
 
+const fs = require('fs').promises;
+var parse = require('csv-parse/lib/sync');
+const db = require("../../db.Models");
+const dbI = require("../../db.Models/Insurance.db");
+
+const insurance=dbI.user;
 /**
  *@description {checks whether the user exists in DMV list}
  * @param {request consists of the photoURL, id, date, license Number} req
@@ -70,6 +73,26 @@ Banger Team`;
  * @param {request consists of the NIC Number, id} req
  * @param {response of the booking} res
  */
+// check fraud claims
+exports.checkForFraudClaimsFromInsuranceDB = (req, res) => {
+  const id = req.body.identityNumber;
+  let message={description: "ID number is listed in Insurance Records"};
+
+  insurance.findOne({ where: { identityNum: id }}).then(data => {
+    if(data===null){
+      res.status(200).send({message: "ID number is not listed in Insurance Records", refuseBooking: false});
+    }else{
+      updateBooking(res,message.description, req.body.id);
+    }
+  })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error occurred=" +err
+      });
+    });
+}
+
+
 exports.checkForFraudClaims = (req, res) => {
   console.log(req.body);
   (async function () {
@@ -87,6 +110,9 @@ exports.checkForFraudClaims = (req, res) => {
     }
   })();
 };
+
+
+
 // (async (id) => {
 //   const {body} = await got.post('https://httpbin.org/anything', {
 //     json: {
@@ -114,3 +140,4 @@ updateBooking=(res,description, id)=>{
       }
     })
 }
+

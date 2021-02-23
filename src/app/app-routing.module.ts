@@ -15,7 +15,7 @@ import {RateComparisonsComponent} from './clerk/rate-comparisons/rate-comparison
 import {AuthGuardService} from './services/auth-guard.service';
 
 const routes: Routes = [
-  {path: '', component: LoginComponent},
+  {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent,},
   {path: 'home', component: HomeComponent},
