@@ -1,0 +1,88 @@
+<app-nav-clerk-menu></app-nav-clerk-menu>
+<h1 align="center">Competitive Rate Comparison</h1>
+<mat-divider></mat-divider>
+<h4>Banger Vehicle Rates</h4>
+<div class="container mat-elevation-z8">
+
+  <div class="form">
+    <mat-form-field color="accent">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Filter Vehicles" #input>
+    </mat-form-field>
+  </div>
+
+  <mat-table #table [dataSource]="dataSource" matSort #sort="matSort" class="mat-cell">
+
+    <ng-container matColumnDef="vehicleName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Vehicle Name</mat-header-cell>
+      <mat-cell *matCellDef="let row" >{{row.vehicleName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="vehicleType">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>vehicle Type</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.vehicleType}}</mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Price Per Day</mat-header-cell>
+      <mat-cell *matCellDef="let row"> Rs. {{row.price * 175}}</mat-cell>
+    </ng-container>
+
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator
+                 [pageIndex]="0"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+</div>
+<mat-divider></mat-divider>
+<h4>Competitive Rates</h4>
+<div class="container mat-elevation-z8">
+
+  <div class="form">
+    <mat-form-field color="accent">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilterCR($event)" placeholder="Filter Competitive Rates" #input>
+    </mat-form-field>
+  </div>
+
+  <mat-table #table [dataSource]="dataSourceCRates" matSort #sortCR="matSort" class="mat-cell">
+
+    <ng-container matColumnDef="vehicleName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Vehicle Name</mat-header-cell>
+      <mat-cell *matCellDef="let row" >{{row.vehicleName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ratePerWeek">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Rate Per Week</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.ratePerWeek}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ratePerMonth">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Rate Per Month</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.ratePerMonth}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="excessMileagePerDay">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Excess Mileage Per Day</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.excessMileagePerDay}}</mat-cell>
+    </ng-container>
+
+
+    <mat-header-row *matHeaderRowDef="displayedColumnsCR"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnsCR;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginatorCR
+                 [pageIndex]="0"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10]">
+  </mat-paginator>
+</div>
+<app-about-us-footer></app-about-us-footer>
+
+
